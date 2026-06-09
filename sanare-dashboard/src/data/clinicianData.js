@@ -1,17 +1,17 @@
 // ─── Alex Chen — 12 weeks ───────────────────────────────────────────────────
 const alexWeeklyData = [
-  { week: 1,  label: 'Wk 1',  rom: { actual: 47,  expected: 50  }, emg: { vmo: 34, vl: 41, rf: 37, bf: 46, gastroc: 51 }, adherence: 72, sessions: 3, painScore: 7.2, symmetryIndex: 57 },
-  { week: 2,  label: 'Wk 2',  rom: { actual: 52,  expected: 58  }, emg: { vmo: 36, vl: 43, rf: 39, bf: 47, gastroc: 53 }, adherence: 65, sessions: 3, painScore: 6.8, symmetryIndex: 59 },
-  { week: 3,  label: 'Wk 3',  rom: { actual: 61,  expected: 66  }, emg: { vmo: 38, vl: 46, rf: 41, bf: 49, gastroc: 55 }, adherence: 80, sessions: 4, painScore: 6.1, symmetryIndex: 61 },
-  { week: 4,  label: 'Wk 4',  rom: { actual: 68,  expected: 74  }, emg: { vmo: 41, vl: 49, rf: 44, bf: 52, gastroc: 58 }, adherence: 60, sessions: 3, painScore: 5.6, symmetryIndex: 63 },
-  { week: 5,  label: 'Wk 5',  rom: { actual: 75,  expected: 82  }, emg: { vmo: 44, vl: 53, rf: 47, bf: 55, gastroc: 61 }, adherence: 85, sessions: 4, painScore: 5.0, symmetryIndex: 65 },
-  { week: 6,  label: 'Wk 6',  rom: { actual: 83,  expected: 88  }, emg: { vmo: 47, vl: 57, rf: 50, bf: 58, gastroc: 64 }, adherence: 90, sessions: 5, painScore: 4.4, symmetryIndex: 68 },
-  { week: 7,  label: 'Wk 7',  rom: { actual: 89,  expected: 94  }, emg: { vmo: 51, vl: 61, rf: 54, bf: 61, gastroc: 67 }, adherence: 95, sessions: 5, painScore: 3.9, symmetryIndex: 71 },
-  { week: 8,  label: 'Wk 8',  rom: { actual: 96,  expected: 100 }, emg: { vmo: 55, vl: 65, rf: 57, bf: 64, gastroc: 70 }, adherence: 88, sessions: 4, painScore: 3.3, symmetryIndex: 74 },
-  { week: 9,  label: 'Wk 9',  rom: { actual: 101, expected: 105 }, emg: { vmo: 58, vl: 68, rf: 60, bf: 67, gastroc: 73 }, adherence: 75, sessions: 4, painScore: 2.9, symmetryIndex: 76 },
-  { week: 10, label: 'Wk 10', rom: { actual: 107, expected: 110 }, emg: { vmo: 62, vl: 72, rf: 63, bf: 70, gastroc: 76 }, adherence: 92, sessions: 5, painScore: 2.4, symmetryIndex: 79 },
-  { week: 11, label: 'Wk 11', rom: { actual: 112, expected: 115 }, emg: { vmo: 66, vl: 75, rf: 66, bf: 72, gastroc: 78 }, adherence: 78, sessions: 4, painScore: 2.0, symmetryIndex: 81 },
-  { week: 12, label: 'Wk 12', rom: { actual: 118, expected: 120 }, emg: { vmo: 72, vl: 78, rf: 70, bf: 75, gastroc: 80 }, adherence: 87, sessions: 4, painScore: 1.6, symmetryIndex: 84 },
+  { week: 1,  label: 'Wk 1',  rom: { actual: 47,  expected: 50  }, emg: { vmo: 34, vl: 41, rf: 37, bf: 46, gastroc: 51 }, adherence: 72, sessions: 3, painScore: 7.2, symmetryIndex: 57, jsi: 40 },
+  { week: 2,  label: 'Wk 2',  rom: { actual: 52,  expected: 58  }, emg: { vmo: 36, vl: 43, rf: 39, bf: 47, gastroc: 53 }, adherence: 65, sessions: 3, painScore: 6.8, symmetryIndex: 59, jsi: 43 },
+  { week: 3,  label: 'Wk 3',  rom: { actual: 61,  expected: 66  }, emg: { vmo: 38, vl: 46, rf: 41, bf: 49, gastroc: 55 }, adherence: 80, sessions: 4, painScore: 6.1, symmetryIndex: 61, jsi: 46 },
+  { week: 4,  label: 'Wk 4',  rom: { actual: 68,  expected: 74  }, emg: { vmo: 41, vl: 49, rf: 44, bf: 52, gastroc: 58 }, adherence: 60, sessions: 3, painScore: 5.6, symmetryIndex: 63, jsi: 49 },
+  { week: 5,  label: 'Wk 5',  rom: { actual: 75,  expected: 82  }, emg: { vmo: 44, vl: 53, rf: 47, bf: 55, gastroc: 61 }, adherence: 85, sessions: 4, painScore: 5.0, symmetryIndex: 65, jsi: 52 },
+  { week: 6,  label: 'Wk 6',  rom: { actual: 83,  expected: 88  }, emg: { vmo: 47, vl: 57, rf: 50, bf: 58, gastroc: 64 }, adherence: 90, sessions: 5, painScore: 4.4, symmetryIndex: 68, jsi: 55 },
+  { week: 7,  label: 'Wk 7',  rom: { actual: 89,  expected: 94  }, emg: { vmo: 51, vl: 61, rf: 54, bf: 61, gastroc: 67 }, adherence: 95, sessions: 5, painScore: 3.9, symmetryIndex: 71, jsi: 58 },
+  { week: 8,  label: 'Wk 8',  rom: { actual: 96,  expected: 100 }, emg: { vmo: 55, vl: 65, rf: 57, bf: 64, gastroc: 70 }, adherence: 88, sessions: 4, painScore: 3.3, symmetryIndex: 74, jsi: 62 },
+  { week: 9,  label: 'Wk 9',  rom: { actual: 101, expected: 105 }, emg: { vmo: 58, vl: 68, rf: 60, bf: 67, gastroc: 73 }, adherence: 75, sessions: 4, painScore: 2.9, symmetryIndex: 76, jsi: 65 },
+  { week: 10, label: 'Wk 10', rom: { actual: 107, expected: 110 }, emg: { vmo: 62, vl: 72, rf: 63, bf: 70, gastroc: 76 }, adherence: 92, sessions: 5, painScore: 2.4, symmetryIndex: 79, jsi: 67 },
+  { week: 11, label: 'Wk 11', rom: { actual: 112, expected: 115 }, emg: { vmo: 66, vl: 75, rf: 66, bf: 72, gastroc: 78 }, adherence: 78, sessions: 4, painScore: 2.0, symmetryIndex: 81, jsi: 69 },
+  { week: 12, label: 'Wk 12', rom: { actual: 118, expected: 120 }, emg: { vmo: 72, vl: 78, rf: 70, bf: 75, gastroc: 80 }, adherence: 87, sessions: 4, painScore: 1.6, symmetryIndex: 84, jsi: 71 },
 ]
 
 const alexSessionLog = [
@@ -30,6 +30,7 @@ const alexSummary = {
   avgEmg: 75, avgEmgPrevWeek: 71,
   adherence: 87, adherencePrevWeek: 78,
   symmetryIndex: 84, symmetryPrevWeek: 81,
+  jointStrengthIndex: 71, jointStrengthPrevWeek: 67,
   prescribedSessions: 5, completedSessions: 4,
   bestRom: 118, painAvg: 1.6,
   riskScore: 11,
@@ -41,12 +42,12 @@ const alexAlerts = []
 
 // ─── Marcus Webb — 6 weeks ───────────────────────────────────────────────────
 const marcusWeeklyData = [
-  { week: 1, label: 'Wk 1', rom: { actual: 43, expected: 50  }, emg: { vmo: 33, vl: 40, rf: 36, bf: 44, gastroc: 49 }, adherence: 68, sessions: 3, painScore: 7.8, symmetryIndex: 56 },
-  { week: 2, label: 'Wk 2', rom: { actual: 55, expected: 58  }, emg: { vmo: 35, vl: 43, rf: 38, bf: 46, gastroc: 52 }, adherence: 80, sessions: 4, painScore: 7.1, symmetryIndex: 58 },
-  { week: 3, label: 'Wk 3', rom: { actual: 63, expected: 66  }, emg: { vmo: 37, vl: 47, rf: 40, bf: 48, gastroc: 54 }, adherence: 72, sessions: 3, painScore: 6.4, symmetryIndex: 60 },
-  { week: 4, label: 'Wk 4', rom: { actual: 70, expected: 74  }, emg: { vmo: 37, vl: 52, rf: 42, bf: 51, gastroc: 57 }, adherence: 48, sessions: 2, painScore: 5.9, symmetryIndex: 61 },
-  { week: 5, label: 'Wk 5', rom: { actual: 77, expected: 82  }, emg: { vmo: 38, vl: 56, rf: 45, bf: 54, gastroc: 60 }, adherence: 55, sessions: 3, painScore: 5.2, symmetryIndex: 62 },
-  { week: 6, label: 'Wk 6', rom: { actual: 89, expected: 95  }, emg: { vmo: 38, vl: 62, rf: 48, bf: 57, gastroc: 63 }, adherence: 52, sessions: 3, painScore: 3.2, symmetryIndex: 64 },
+  { week: 1, label: 'Wk 1', rom: { actual: 43, expected: 50  }, emg: { vmo: 33, vl: 40, rf: 36, bf: 44, gastroc: 49 }, adherence: 68, sessions: 3, painScore: 7.8, symmetryIndex: 56, jsi: 38 },
+  { week: 2, label: 'Wk 2', rom: { actual: 55, expected: 58  }, emg: { vmo: 35, vl: 43, rf: 38, bf: 46, gastroc: 52 }, adherence: 80, sessions: 4, painScore: 7.1, symmetryIndex: 58, jsi: 40 },
+  { week: 3, label: 'Wk 3', rom: { actual: 63, expected: 66  }, emg: { vmo: 37, vl: 47, rf: 40, bf: 48, gastroc: 54 }, adherence: 72, sessions: 3, painScore: 6.4, symmetryIndex: 60, jsi: 42 },
+  { week: 4, label: 'Wk 4', rom: { actual: 70, expected: 74  }, emg: { vmo: 37, vl: 52, rf: 42, bf: 51, gastroc: 57 }, adherence: 48, sessions: 2, painScore: 5.9, symmetryIndex: 61, jsi: 44 },
+  { week: 5, label: 'Wk 5', rom: { actual: 77, expected: 82  }, emg: { vmo: 38, vl: 56, rf: 45, bf: 54, gastroc: 60 }, adherence: 55, sessions: 3, painScore: 5.2, symmetryIndex: 62, jsi: 46 },
+  { week: 6, label: 'Wk 6', rom: { actual: 89, expected: 95  }, emg: { vmo: 38, vl: 62, rf: 48, bf: 57, gastroc: 63 }, adherence: 52, sessions: 3, painScore: 3.2, symmetryIndex: 64, jsi: 48 },
 ]
 
 const marcusSessionLog = [
@@ -61,6 +62,7 @@ const marcusSummary = {
   avgEmg: 54, avgEmgPrevWeek: 51,
   adherence: 52, adherencePrevWeek: 55,
   symmetryIndex: 64, symmetryPrevWeek: 62,
+  jointStrengthIndex: 48, jointStrengthPrevWeek: 46,
   prescribedSessions: 5, completedSessions: 3,
   bestRom: 89, painAvg: 3.2,
   riskScore: 68,
@@ -106,18 +108,18 @@ const marcusAlerts = [
 
 // ─── Priya Sharma — weeks 11–22 (12-point chart window) ─────────────────────
 const priyaWeeklyData = [
-  { week: 11, label: 'Wk 11', rom: { actual: 113, expected: 115 }, emg: { vmo: 66, vl: 74, rf: 66, bf: 70, gastroc: 76 }, adherence: 90, sessions: 5, painScore: 1.0, symmetryIndex: 80 },
-  { week: 12, label: 'Wk 12', rom: { actual: 118, expected: 120 }, emg: { vmo: 70, vl: 76, rf: 69, bf: 73, gastroc: 79 }, adherence: 95, sessions: 5, painScore: 0.8, symmetryIndex: 83 },
-  { week: 13, label: 'Wk 13', rom: { actual: 120, expected: 122 }, emg: { vmo: 72, vl: 78, rf: 71, bf: 75, gastroc: 81 }, adherence: 92, sessions: 5, painScore: 0.7, symmetryIndex: 85 },
-  { week: 14, label: 'Wk 14', rom: { actual: 122, expected: 124 }, emg: { vmo: 74, vl: 80, rf: 73, bf: 77, gastroc: 83 }, adherence: 96, sessions: 5, painScore: 0.6, symmetryIndex: 87 },
-  { week: 15, label: 'Wk 15', rom: { actual: 124, expected: 125 }, emg: { vmo: 76, vl: 81, rf: 74, bf: 78, gastroc: 84 }, adherence: 90, sessions: 5, painScore: 0.6, symmetryIndex: 88 },
-  { week: 16, label: 'Wk 16', rom: { actual: 125, expected: 126 }, emg: { vmo: 77, vl: 82, rf: 75, bf: 79, gastroc: 85 }, adherence: 94, sessions: 5, painScore: 0.5, symmetryIndex: 89 },
-  { week: 17, label: 'Wk 17', rom: { actual: 126, expected: 127 }, emg: { vmo: 78, vl: 82, rf: 76, bf: 79, gastroc: 85 }, adherence: 96, sessions: 5, painScore: 0.5, symmetryIndex: 89 },
-  { week: 18, label: 'Wk 18', rom: { actual: 127, expected: 128 }, emg: { vmo: 78, vl: 82, rf: 76, bf: 79, gastroc: 86 }, adherence: 95, sessions: 5, painScore: 0.4, symmetryIndex: 90 },
-  { week: 19, label: 'Wk 19', rom: { actual: 127, expected: 128 }, emg: { vmo: 79, vl: 82, rf: 76, bf: 78, gastroc: 86 }, adherence: 98, sessions: 5, painScore: 0.4, symmetryIndex: 90 },
-  { week: 20, label: 'Wk 20', rom: { actual: 128, expected: 128 }, emg: { vmo: 79, vl: 82, rf: 76, bf: 78, gastroc: 86 }, adherence: 95, sessions: 5, painScore: 0.4, symmetryIndex: 91 },
-  { week: 21, label: 'Wk 21', rom: { actual: 128, expected: 128 }, emg: { vmo: 79, vl: 82, rf: 77, bf: 78, gastroc: 86 }, adherence: 96, sessions: 5, painScore: 0.4, symmetryIndex: 91 },
-  { week: 22, label: 'Wk 22', rom: { actual: 128, expected: 125 }, emg: { vmo: 79, vl: 82, rf: 76, bf: 78, gastroc: 85 }, adherence: 96, sessions: 5, painScore: 0.4, symmetryIndex: 91 },
+  { week: 11, label: 'Wk 11', rom: { actual: 113, expected: 115 }, emg: { vmo: 66, vl: 74, rf: 66, bf: 70, gastroc: 76 }, adherence: 90, sessions: 5, painScore: 1.0, symmetryIndex: 80, jsi: 68 },
+  { week: 12, label: 'Wk 12', rom: { actual: 118, expected: 120 }, emg: { vmo: 70, vl: 76, rf: 69, bf: 73, gastroc: 79 }, adherence: 95, sessions: 5, painScore: 0.8, symmetryIndex: 83, jsi: 70 },
+  { week: 13, label: 'Wk 13', rom: { actual: 120, expected: 122 }, emg: { vmo: 72, vl: 78, rf: 71, bf: 75, gastroc: 81 }, adherence: 92, sessions: 5, painScore: 0.7, symmetryIndex: 85, jsi: 72 },
+  { week: 14, label: 'Wk 14', rom: { actual: 122, expected: 124 }, emg: { vmo: 74, vl: 80, rf: 73, bf: 77, gastroc: 83 }, adherence: 96, sessions: 5, painScore: 0.6, symmetryIndex: 87, jsi: 74 },
+  { week: 15, label: 'Wk 15', rom: { actual: 124, expected: 125 }, emg: { vmo: 76, vl: 81, rf: 74, bf: 78, gastroc: 84 }, adherence: 90, sessions: 5, painScore: 0.6, symmetryIndex: 88, jsi: 76 },
+  { week: 16, label: 'Wk 16', rom: { actual: 125, expected: 126 }, emg: { vmo: 77, vl: 82, rf: 75, bf: 79, gastroc: 85 }, adherence: 94, sessions: 5, painScore: 0.5, symmetryIndex: 89, jsi: 78 },
+  { week: 17, label: 'Wk 17', rom: { actual: 126, expected: 127 }, emg: { vmo: 78, vl: 82, rf: 76, bf: 79, gastroc: 85 }, adherence: 96, sessions: 5, painScore: 0.5, symmetryIndex: 89, jsi: 80 },
+  { week: 18, label: 'Wk 18', rom: { actual: 127, expected: 128 }, emg: { vmo: 78, vl: 82, rf: 76, bf: 79, gastroc: 86 }, adherence: 95, sessions: 5, painScore: 0.4, symmetryIndex: 90, jsi: 82 },
+  { week: 19, label: 'Wk 19', rom: { actual: 127, expected: 128 }, emg: { vmo: 79, vl: 82, rf: 76, bf: 78, gastroc: 86 }, adherence: 98, sessions: 5, painScore: 0.4, symmetryIndex: 90, jsi: 84 },
+  { week: 20, label: 'Wk 20', rom: { actual: 128, expected: 128 }, emg: { vmo: 79, vl: 82, rf: 76, bf: 78, gastroc: 86 }, adherence: 95, sessions: 5, painScore: 0.4, symmetryIndex: 91, jsi: 86 },
+  { week: 21, label: 'Wk 21', rom: { actual: 128, expected: 128 }, emg: { vmo: 79, vl: 82, rf: 77, bf: 78, gastroc: 86 }, adherence: 96, sessions: 5, painScore: 0.4, symmetryIndex: 91, jsi: 87 },
+  { week: 22, label: 'Wk 22', rom: { actual: 128, expected: 125 }, emg: { vmo: 79, vl: 82, rf: 76, bf: 78, gastroc: 85 }, adherence: 96, sessions: 5, painScore: 0.4, symmetryIndex: 91, jsi: 88 },
 ]
 
 const priyaSessionLog = [
@@ -136,6 +138,7 @@ const priyaSummary = {
   avgEmg: 80, avgEmgPrevWeek: 80,
   adherence: 96, adherencePrevWeek: 96,
   symmetryIndex: 91, symmetryPrevWeek: 91,
+  jointStrengthIndex: 88, jointStrengthPrevWeek: 87,
   prescribedSessions: 5, completedSessions: 5,
   bestRom: 128, painAvg: 0.4,
   riskScore: 5,

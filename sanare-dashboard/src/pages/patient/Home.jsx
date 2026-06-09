@@ -96,7 +96,7 @@ export default function Home() {
                     </div>
                     <div className="w-full bg-[#F0F0F0] rounded-full h-1.5">
                       <div
-                        className="h-1.5 rounded-full transition-all duration-1000"
+                        className="h-1.5 rounded-full transition-[width] duration-1000 ease-out"
                         style={{ width: animated ? `${pct}%` : '0%', backgroundColor: color }}
                       />
                     </div>
@@ -110,7 +110,7 @@ export default function Home() {
         {/* Section 2: CTA */}
         <Link
           to="/patient/log"
-          className="block w-full bg-[#1E3A5F] text-white font-semibold py-4 rounded-xl text-center text-base active:scale-98 transition-transform"
+          className="block w-full bg-[#1E3A5F] text-white font-bold py-4 rounded-xl text-center text-base active:scale-95 transition-transform duration-150"
         >
           Log Today's Session
         </Link>

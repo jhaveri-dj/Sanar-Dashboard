@@ -97,7 +97,7 @@ export default function Insights() {
           <div className="flex items-start gap-3">
             <span className="text-2xl flex-shrink-0">💬</span>
             <div>
-              <p className="text-[#1E3A5F] font-bold text-sm mb-2">From Dr. Sarah Mitchell</p>
+              <p className="text-[#1E3A5F] font-bold text-sm mb-2">From Sarah Mitchell</p>
               <p className="text-gray-600 text-sm leading-relaxed">
                 {weeklyInsights.motivationalMessage}
               </p>

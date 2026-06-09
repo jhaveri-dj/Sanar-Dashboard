@@ -250,10 +250,11 @@ export default function PatientDetail() {
   const riskScore = s.riskScore
 
   const statCards = [
-    { label: 'Current ROM',       value: `${s.rom}°`,           current: s.rom,           previous: s.romPrevWeek,       unit: '°',  sub: 'Range of motion',       color: '#3B82F6' },
-    { label: 'Avg EMG Activation',value: `${s.avgEmg}%`,        current: s.avgEmg,        previous: s.avgEmgPrevWeek,    unit: '%',  sub: '5-muscle avg MVIC',     color: '#8B5CF6' },
-    { label: 'Weekly Adherence',  value: `${s.adherence}%`,     current: s.adherence,     previous: s.adherencePrevWeek, unit: '%',  sub: 'Session completion',    color: s.adherence >= 80 ? '#10B981' : '#F59E0B' },
-    { label: 'Symmetry Index',    value: `${s.symmetryIndex}%`, current: s.symmetryIndex, previous: s.symmetryPrevWeek,  unit: '%',  sub: 'Operated vs intact leg', color: s.symmetryIndex >= 80 ? '#10B981' : s.symmetryIndex >= 70 ? '#F59E0B' : '#EF4444' },
+    { label: 'Current ROM',        value: `${s.rom}°`,                current: s.rom,                previous: s.romPrevWeek,             unit: '°',  sub: 'Range of motion',        color: '#3B82F6' },
+    { label: 'Avg EMG Activation', value: `${s.avgEmg}%`,             current: s.avgEmg,             previous: s.avgEmgPrevWeek,          unit: '%',  sub: '5-muscle avg MVIC',      color: '#8B5CF6' },
+    { label: 'Weekly Adherence',   value: `${s.adherence}%`,          current: s.adherence,          previous: s.adherencePrevWeek,       unit: '%',  sub: 'Session completion',     color: s.adherence >= 80 ? '#10B981' : '#F59E0B' },
+    { label: 'Symmetry Index',     value: `${s.symmetryIndex}%`,      current: s.symmetryIndex,      previous: s.symmetryPrevWeek,        unit: '%',  sub: 'Operated vs intact leg', color: s.symmetryIndex >= 80 ? '#10B981' : s.symmetryIndex >= 70 ? '#F59E0B' : '#EF4444' },
+    { label: 'Joint Strength Index',value: `${s.jointStrengthIndex}%`,current: s.jointStrengthIndex, previous: s.jointStrengthPrevWeek,   unit: '%',  sub: 'Est. · Sanaré algorithm', color: s.jointStrengthIndex >= 80 ? '#10B981' : s.jointStrengthIndex >= 60 ? '#F59E0B' : '#EF4444' },
   ]
 
   return (
@@ -287,7 +288,7 @@ export default function PatientDetail() {
         <TrajectoryTimeline patient={patient} />
 
         {/* ── Stat cards ── */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
           {statCards.map(({ label, value, current, previous, unit, sub, color }) => (
             <div key={label} className="bg-[#111827] rounded-lg p-5 border border-white/5">
               <p className="text-[#6B7280] text-xs font-medium uppercase tracking-wider mb-3">{label}</p>

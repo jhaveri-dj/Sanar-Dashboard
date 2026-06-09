@@ -11,7 +11,7 @@ const INITIAL_MESSAGES = [
   {
     id: 2,
     sender: 'patient',
-    text: "Thanks Dr. Mitchell! Should I increase the weight on single-leg press? It's been feeling easier at 45lbs.",
+    text: "Thanks Sarah Mitchell! Should I increase the weight on single-leg press? It's been feeling easier at 45lbs.",
     time: 'Jun 3, 11:15 AM',
   },
   {
@@ -102,7 +102,7 @@ export default function Messages() {
                   <div className="w-6 h-6 rounded-full bg-gradient-to-br from-[#3B82F6] to-[#1D4ED8] flex items-center justify-center text-white font-bold text-[9px] flex-shrink-0">
                     SM
                   </div>
-                  <span className="text-[#6B6B6B] text-xs font-medium">Dr. Mitchell</span>
+                  <span className="text-[#6B6B6B] text-xs font-medium">Sarah Mitchell</span>
                 </div>
               )}
               <div
@@ -131,7 +131,7 @@ export default function Messages() {
             value={draft}
             onChange={e => setDraft(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Message Dr. Mitchell..."
+            placeholder="Message Sarah Mitchell..."
             rows={1}
             className="flex-1 bg-[#F7F7F8] border border-[#E5E5E5] rounded-2xl px-4 py-2.5 text-sm text-[#0A0A0A] placeholder-[#9CA3AF] resize-none outline-none focus:border-[#1E3A5F] transition-colors leading-relaxed"
             style={{ minHeight: '42px', maxHeight: '120px', overflow: 'auto' }}

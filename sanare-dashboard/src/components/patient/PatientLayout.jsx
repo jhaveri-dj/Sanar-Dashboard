@@ -92,7 +92,7 @@ export default function PatientLayout({ children }) {
               key={path}
               to={path}
               className={({ isActive }) =>
-                `flex-1 flex flex-col items-center gap-0.5 py-2.5 transition-colors ${
+                `flex-1 flex flex-col items-center gap-0.5 py-2.5 transition-colors active:opacity-70 ${
                   isActive ? 'text-[#1E3A5F]' : 'text-[#9CA3AF]'
                 }`
               }

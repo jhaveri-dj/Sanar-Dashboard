@@ -12,6 +12,8 @@ import Progress from './pages/patient/Progress'
 import Log from './pages/patient/Log'
 import Messages from './pages/patient/Messages'
 import Insights from './pages/patient/Insights'
+import SurgeonDashboard from './pages/surgeon/SurgeonDashboard'
+import SurgeonPatientDetail from './pages/surgeon/SurgeonPatientDetail'
 
 export default function App() {
   return (
@@ -47,6 +49,13 @@ export default function App() {
           } />
           <Route path="/patient/insights" element={
             <ProtectedRoute requiredRole="patient"><Insights /></ProtectedRoute>
+          } />
+
+          <Route path="/surgeon/dashboard" element={
+            <ProtectedRoute requiredRole="surgeon"><SurgeonDashboard /></ProtectedRoute>
+          } />
+          <Route path="/surgeon/patient/:id" element={
+            <ProtectedRoute requiredRole="surgeon"><SurgeonPatientDetail /></ProtectedRoute>
           } />
 
           <Route path="*" element={<Navigate to="/login" replace />} />

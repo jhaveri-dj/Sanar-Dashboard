@@ -1,38 +1,15 @@
-import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import DemoBadge from '../components/shared/DemoBadge'
 
 export default function Login() {
-  const { login } = useAuth()
+  const { selectRole } = useAuth()
   const navigate = useNavigate()
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
 
-  function handleSubmit(e) {
-    e.preventDefault()
-    setError('')
-    setLoading(true)
-    const result = login(email, password)
-    setLoading(false)
-    if (!result.success) {
-      setError(result.error)
-      return
-    }
-    navigate(result.role === 'clinician' ? '/clinician/dashboard' : '/patient/home', { replace: true })
-  }
-
-  function fillDemo(role) {
-    if (role === 'clinician') {
-      setEmail('dr.sarah@sanare.com')
-      setPassword('clinic123')
-    } else {
-      setEmail('alex@patient.com')
-      setPassword('patient123')
-    }
-    setError('')
+  function enter(role) {
+    selectRole(role)
+    const dest = role === 'clinician' ? '/clinician/dashboard' : role === 'surgeon' ? '/surgeon/dashboard' : '/patient/home'
+    navigate(dest, { replace: true })
   }
 
   return (
@@ -40,90 +17,88 @@ export default function Login() {
       <DemoBadge />
 
       {/* Logo + wordmark */}
-      <div className="mb-8 text-center">
-        <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-[#3B82F6] mb-4 shadow-lg">
-          <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+      <div className="mb-10 text-center">
+        <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-[#3B82F6] mb-5 shadow-xl shadow-blue-500/30">
+          <svg width="32" height="32" viewBox="0 0 28 28" fill="none">
             <path d="M14 4C9.58 4 6 7.58 6 12c0 5.25 8 15 8 15s8-9.75 8-15c0-4.42-3.58-8-8-8z" fill="white" opacity="0.9"/>
             <circle cx="14" cy="12" r="3" fill="white"/>
           </svg>
         </div>
-        <h1 className="text-2xl font-bold text-white tracking-tight">Sanaré</h1>
-        <p className="text-[#6B7280] text-sm mt-1">ACL Rehabilitation Platform</p>
+        <h1 className="text-3xl font-black text-white tracking-tight">Sanaré</h1>
+        <p className="text-[#6B7280] text-sm mt-1.5">ACL Rehabilitation Platform</p>
       </div>
 
-      {/* Login card */}
-      <div className="w-full max-w-sm bg-[#111827] rounded-2xl p-8 shadow-2xl border border-white/5">
-        <h2 className="text-white text-xl font-semibold mb-6">Sign in</h2>
+      {/* Role selector */}
+      <div className="w-full max-w-sm">
+        <p className="text-[#4B5563] text-xs text-center uppercase tracking-widest mb-4">Select a portal to continue</p>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-xs font-medium text-[#9CA3AF] mb-1.5 uppercase tracking-wider">
-              Email
-            </label>
-            <input
-              type="email"
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              required
-              autoComplete="email"
-              placeholder="you@example.com"
-              className="w-full bg-[#1F2937] text-white placeholder-[#4B5563] rounded-lg px-4 py-3 text-sm border border-white/10 focus:outline-none focus:border-[#3B82F6] focus:ring-1 focus:ring-[#3B82F6] transition"
-            />
-          </div>
-
-          <div>
-            <label className="block text-xs font-medium text-[#9CA3AF] mb-1.5 uppercase tracking-wider">
-              Password
-            </label>
-            <input
-              type="password"
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-              required
-              autoComplete="current-password"
-              placeholder="••••••••"
-              className="w-full bg-[#1F2937] text-white placeholder-[#4B5563] rounded-lg px-4 py-3 text-sm border border-white/10 focus:outline-none focus:border-[#3B82F6] focus:ring-1 focus:ring-[#3B82F6] transition"
-            />
-          </div>
-
-          {error && (
-            <p className="text-[#EF4444] text-sm bg-[#EF4444]/10 border border-[#EF4444]/20 rounded-lg px-3 py-2">
-              {error}
-            </p>
-          )}
-
+        <div className="space-y-3">
+          {/* Clinician card */}
           <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-[#3B82F6] hover:bg-[#2563EB] text-white font-semibold rounded-lg py-3 text-sm transition disabled:opacity-50 disabled:cursor-not-allowed mt-2"
+            onClick={() => enter('clinician')}
+            className="w-full bg-[#111827] hover:bg-[#1F2937] active:scale-[0.98] border border-white/10 hover:border-[#3B82F6]/40 rounded-2xl p-6 text-left transition-[background-color,border-color,transform] duration-150 group"
           >
-            {loading ? 'Signing in…' : 'Sign in'}
+            <div className="flex items-center gap-4">
+              <div className="w-11 h-11 rounded-xl bg-[#3B82F6]/15 border border-[#3B82F6]/25 flex items-center justify-center flex-shrink-0 group-hover:bg-[#3B82F6]/25 transition-colors duration-150">
+                <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#3B82F6" strokeWidth={1.8}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
+                </svg>
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-white font-bold text-base leading-tight">Clinician Dashboard</p>
+                <p className="text-[#6B7280] text-xs mt-0.5">Sarah Mitchell · PT, DPT, SCS</p>
+              </div>
+              <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="#4B5563" strokeWidth={2} className="flex-shrink-0 group-hover:stroke-[#3B82F6] transition-colors duration-150">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7"/>
+              </svg>
+            </div>
           </button>
-        </form>
 
-        {/* Demo quick-fill */}
-        <div className="mt-6 pt-5 border-t border-white/10">
-          <p className="text-xs text-[#6B7280] text-center mb-3 uppercase tracking-wider">Demo accounts</p>
-          <div className="flex gap-2">
-            <button
-              type="button"
-              onClick={() => fillDemo('clinician')}
-              className="flex-1 bg-[#1F2937] hover:bg-[#374151] border border-white/10 text-[#9CA3AF] hover:text-white rounded-lg py-2 text-xs font-medium transition"
-            >
-              Clinician
-            </button>
-            <button
-              type="button"
-              onClick={() => fillDemo('patient')}
-              className="flex-1 bg-[#1F2937] hover:bg-[#374151] border border-white/10 text-[#9CA3AF] hover:text-white rounded-lg py-2 text-xs font-medium transition"
-            >
-              Patient
-            </button>
-          </div>
+          {/* Patient card */}
+          <button
+            onClick={() => enter('patient')}
+            className="w-full bg-[#111827] hover:bg-[#1F2937] active:scale-[0.98] border border-white/10 hover:border-[#10B981]/40 rounded-2xl p-6 text-left transition-[background-color,border-color,transform] duration-150 group"
+          >
+            <div className="flex items-center gap-4">
+              <div className="w-11 h-11 rounded-xl bg-[#10B981]/15 border border-[#10B981]/25 flex items-center justify-center flex-shrink-0 group-hover:bg-[#10B981]/25 transition-colors duration-150">
+                <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#10B981" strokeWidth={1.8}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                </svg>
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-white font-bold text-base leading-tight">Patient Dashboard</p>
+                <p className="text-[#6B7280] text-xs mt-0.5">Alex Chen · Week 12 Recovery</p>
+              </div>
+              <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="#4B5563" strokeWidth={2} className="flex-shrink-0 group-hover:stroke-[#10B981] transition-colors duration-150">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7"/>
+              </svg>
+            </div>
+          </button>
+
+          {/* Surgeon card */}
+          <button
+            onClick={() => enter('surgeon')}
+            className="w-full bg-[#111827] hover:bg-[#1F2937] active:scale-[0.98] border border-white/10 hover:border-[#8B5CF6]/40 rounded-2xl p-6 text-left transition-[background-color,border-color,transform] duration-150 group"
+          >
+            <div className="flex items-center gap-4">
+              <div className="w-11 h-11 rounded-xl bg-[#8B5CF6]/15 border border-[#8B5CF6]/25 flex items-center justify-center flex-shrink-0 group-hover:bg-[#8B5CF6]/25 transition-colors duration-150">
+                <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#8B5CF6" strokeWidth={1.8}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2v-4M9 21H5a2 2 0 01-2-2v-4m0 0h18"/>
+                </svg>
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-white font-bold text-base leading-tight">Surgeon Portal</p>
+                <p className="text-[#6B7280] text-xs mt-0.5">Dr. James Ortiz · Orthopedic Surgeon</p>
+              </div>
+              <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="#4B5563" strokeWidth={2} className="flex-shrink-0 group-hover:stroke-[#8B5CF6] transition-colors duration-150">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7"/>
+              </svg>
+            </div>
+          </button>
         </div>
       </div>
 
-      <p className="mt-6 text-xs text-[#4B5563] text-center">
+      <p className="mt-8 text-xs text-[#4B5563] text-center">
         All data is synthetic. For demonstration purposes only.
       </p>
     </div>

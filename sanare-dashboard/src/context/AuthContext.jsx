@@ -1,8 +1,9 @@
 import { createContext, useContext, useState } from 'react'
 
-const CREDENTIALS = {
-  'dr.sarah@sanare.com': { password: 'clinic123', role: 'clinician', name: 'Dr. Sarah Mitchell' },
-  'alex@patient.com':    { password: 'patient123', role: 'patient',   name: 'Alex Chen' },
+const ROLE_USERS = {
+  clinician: { role: 'clinician', name: 'Sarah Mitchell' },
+  patient:   { role: 'patient',   name: 'Alex Chen' },
+  surgeon:   { role: 'surgeon',   name: 'Dr. James Ortiz' },
 }
 
 const AuthContext = createContext(null)
@@ -17,15 +18,10 @@ export function AuthProvider({ children }) {
     }
   })
 
-  function login(email, password) {
-    const match = CREDENTIALS[email.toLowerCase()]
-    if (!match || match.password !== password) {
-      return { success: false, error: 'Invalid email or password.' }
-    }
-    const userData = { email: email.toLowerCase(), role: match.role, name: match.name }
+  function selectRole(role) {
+    const userData = ROLE_USERS[role]
     localStorage.setItem('sanare_user', JSON.stringify(userData))
     setUser(userData)
-    return { success: true, role: match.role }
   }
 
   function logout() {
@@ -34,7 +30,7 @@ export function AuthProvider({ children }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, selectRole, logout }}>
       {children}
     </AuthContext.Provider>
   )

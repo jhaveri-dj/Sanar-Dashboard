@@ -168,7 +168,7 @@ export default function RehabPlan() {
           <div className="bg-[#0A0F1E] rounded-xl p-4 border border-white/5">
             <p className="text-[#9CA3AF] text-sm leading-relaxed">{p.notes}</p>
           </div>
-          <p className="text-[#4B5563] text-xs mt-3">Read-only — notes updated by Dr. Sarah Mitchell</p>
+          <p className="text-[#4B5563] text-xs mt-3">Read-only — notes updated by Sarah Mitchell</p>
         </div>
 
       </div>

@@ -22,10 +22,6 @@ function getRiskLabel(score) {
 }
 
 export default function Dashboard() {
-  const patientsNeedingReview = patients
-    .filter(p => patientDataMap[p.id].alerts.length > 0)
-    .sort((a, b) => patientDataMap[b.id].currentWeekSummary.riskScore - patientDataMap[a.id].currentWeekSummary.riskScore)
-
   return (
     <ClinicianLayout>
       <div className="p-6 md:p-8">
@@ -33,50 +29,11 @@ export default function Dashboard() {
         {/* Header */}
         <div className="mb-7">
           <p className="text-[#6B7280] text-sm mb-1">Welcome back</p>
-          <h1 className="text-[#F9FAFB] text-2xl font-bold tracking-tight">Dr. Sarah Mitchell</h1>
+          <h1 className="text-[#F9FAFB] text-2xl font-bold tracking-tight">Sarah Mitchell</h1>
           <p className="text-[#6B7280] text-sm mt-1">
             {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
           </p>
         </div>
-
-        {/* Patients Requiring Review banner */}
-        {patientsNeedingReview.length > 0 && (
-          <div className="mb-6 bg-[#EF4444]/10 border border-[#EF4444]/30 rounded-xl px-5 py-4">
-            <div className="flex items-start gap-4">
-              <div className="w-8 h-8 rounded-full bg-[#EF4444]/20 flex items-center justify-center flex-shrink-0 mt-0.5">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#EF4444" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
-                </svg>
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-[#EF4444] font-semibold text-sm mb-2">Patients Requiring Review</p>
-                <div className="flex flex-col gap-2">
-                  {patientsNeedingReview.map(p => {
-                    const d = patientDataMap[p.id]
-                    const alertCount = d.alerts.length
-                    const risk = d.currentWeekSummary.riskScore
-                    return (
-                      <div key={p.id} className="flex items-center gap-3 flex-wrap">
-                        <Link
-                          to={`/clinician/patient/${p.id}`}
-                          className="text-[#FCA5A5] text-xs bg-[#EF4444]/10 border border-[#EF4444]/20 px-2.5 py-0.5 rounded-full hover:bg-[#EF4444]/20 transition-colors"
-                        >
-                          {p.name}
-                        </Link>
-                        <span className="text-[#9CA3AF] text-xs">{alertCount} flag{alertCount > 1 ? 's' : ''}</span>
-                        <span className="text-[#6B7280] text-xs">·</span>
-                        <span className="text-[#EF4444] text-xs font-medium">Risk score {risk}</span>
-                      </div>
-                    )
-                  })}
-                </div>
-              </div>
-              <Link to="/clinician/alerts" className="text-[#EF4444] text-xs font-semibold hover:underline flex-shrink-0 whitespace-nowrap">
-                View all →
-              </Link>
-            </div>
-          </div>
-        )}
 
         {/* Section header */}
         <div className="flex items-center justify-between mb-5">
@@ -176,7 +133,7 @@ export default function Dashboard() {
                       className={`px-5 py-3.5 ${i > 0 ? 'border-l border-[#1F2937]' : ''} ${i >= 3 ? 'border-t border-[#1F2937] md:border-t-0' : ''}`}
                     >
                       <p className="text-xs uppercase tracking-wider text-slate-400 mb-1">{label}</p>
-                      <p className="font-bold text-base leading-tight" style={{ color }}>{value}</p>
+                      <p className="font-bold text-lg leading-tight" style={{ color }}>{value}</p>
                       <p className="text-[#6B7280] text-xs mt-0.5">{sub}</p>
                     </div>
                   ))}
