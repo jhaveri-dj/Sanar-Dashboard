@@ -26,7 +26,7 @@ export default function App() {
           <Route path="/clinician/patient/:id" element={
             <ProtectedRoute requiredRole="clinician"><PatientDetail /></ProtectedRoute>
           } />
-          <Route path="/clinician/rehab-plan" element={
+          <Route path="/clinician/patient/:id/rehab-plan" element={
             <ProtectedRoute requiredRole="clinician"><RehabPlan /></ProtectedRoute>
           } />
           <Route path="/clinician/alerts" element={

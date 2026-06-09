@@ -7,7 +7,7 @@ import { weeklyInsights, recentRomTrend, currentMilestone } from '../../data/pat
 const WINS = [
   { emoji: '📐', title: `ROM improved ${weeklyInsights.romImprovement}°`, detail: 'Best week yet — 118° achieved', color: '#3B82F6', bg: '#EFF6FF', border: '#BFDBFE' },
   { emoji: '📋', title: `${weeklyInsights.adherence}% adherence`, detail: '4 of 5 sessions completed on time', color: '#10B981', bg: '#ECFDF5', border: '#A7F3D0' },
-  { emoji: '⚡', title: `VMO activation +${weeklyInsights.vmoActivationIncrease}%`, detail: 'Quad strength building well', color: '#8B5CF6', bg: '#F5F3FF', border: '#DDD6FE' },
+  { emoji: '⚡', title: `Quad strength +${weeklyInsights.vmoActivationIncrease}%`, detail: 'Muscle activation improving', color: '#8B5CF6', bg: '#F5F3FF', border: '#DDD6FE' },
 ]
 
 const CustomTooltip = ({ active, payload, label }) => {

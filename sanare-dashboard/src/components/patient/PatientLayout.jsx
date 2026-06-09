@@ -1,6 +1,14 @@
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import DemoBadge from '../shared/DemoBadge'
+
+function IconLogout() {
+  return (
+    <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+    </svg>
+  )
+}
 
 function IconHome() {
   return (
@@ -47,12 +55,32 @@ const TABS = [
 ]
 
 export default function PatientLayout({ children }) {
+  const { logout } = useAuth()
+  const navigate = useNavigate()
+
+  function handleLogout() {
+    logout()
+    navigate('/login', { replace: true })
+  }
+
   return (
     <div className="min-h-screen bg-[#F7F7F8] flex flex-col">
       <DemoBadge />
 
+      {/* Fixed top bar */}
+      <div className="fixed top-0 inset-x-0 h-11 bg-white border-b border-[#E5E5E5] z-40 flex items-center px-5">
+        <span className="text-[#1E3A5F] font-bold text-sm tracking-tight">Sanaré</span>
+        <button
+          onClick={handleLogout}
+          className="ml-auto flex items-center gap-1.5 text-xs text-[#9CA3AF] hover:text-[#0A0A0A] transition-colors pr-14"
+        >
+          <IconLogout />
+          Sign out
+        </button>
+      </div>
+
       {/* Content */}
-      <main className="flex-1 pb-24 max-w-lg mx-auto w-full">
+      <main className="flex-1 pb-24 mt-11 max-w-lg mx-auto w-full">
         {children}
       </main>
 

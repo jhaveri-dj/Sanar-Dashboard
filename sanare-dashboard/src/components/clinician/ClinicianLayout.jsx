@@ -1,4 +1,4 @@
-import { NavLink, useNavigate } from 'react-router-dom'
+import { NavLink, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import DemoBadge from '../shared/DemoBadge'
 import { allAlerts } from '../../data/clinicianData'
@@ -34,15 +34,22 @@ function IconLogout() {
 
 const alertBadgeCount = allAlerts.filter(a => a.severity === 'red').length
 
-const NAV_ITEMS = [
-  { path: '/clinician/dashboard',  label: 'Dashboard',  Icon: IconHome      },
-  { path: '/clinician/rehab-plan', label: 'Rehab Plan', Icon: IconClipboard },
-  { path: '/clinician/alerts',     label: 'Alerts',     Icon: IconBell, badge: alertBadgeCount },
-]
-
 export default function ClinicianLayout({ children }) {
   const { user, logout } = useAuth()
   const navigate = useNavigate()
+  const location = useLocation()
+
+  const patientMatch = location.pathname.match(/\/clinician\/patient\/([^/]+)/)
+  const currentPatientId = patientMatch ? patientMatch[1] : null
+
+  const NAV_ITEMS = [
+    { path: '/clinician/dashboard', label: 'Dashboard', Icon: IconHome },
+    ...(currentPatientId
+      ? [{ path: `/clinician/patient/${currentPatientId}/rehab-plan`, label: 'Rehab Plan', Icon: IconClipboard }]
+      : []
+    ),
+    { path: '/clinician/alerts', label: 'Alerts', Icon: IconBell, badge: alertBadgeCount },
+  ]
 
   function handleLogout() {
     logout()

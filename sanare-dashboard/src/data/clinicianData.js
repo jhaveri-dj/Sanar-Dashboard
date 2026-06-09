@@ -206,3 +206,55 @@ export const rehabPhases = [
     goals: ['Full sport participation', 'Psychological readiness', 'ACL Re-injury prevention program'],
   },
 ]
+
+// ─── Per-patient rehab phase maps ────────────────────────────────────────────
+const PHASE_DEFS = [
+  { number: 1, name: 'Acute / Protection',   weekRange: 'Weeks 1–3',   goals: ['Control swelling', 'Restore full extension', 'Quad activation', 'Full weight bearing'] },
+  { number: 2, name: 'Early Mobility',        weekRange: 'Weeks 4–9',   goals: ['ROM 0–120°', 'Normal gait pattern', 'Closed chain exercises', 'Proprioception basics'] },
+  { number: 3, name: 'Strengthening',         weekRange: 'Weeks 10–16', goals: ['Quad/hamstring strength ≥70% MVIC', 'Single-leg squat', 'Lateral movements', 'Balance training'] },
+  { number: 4, name: 'Neuromuscular / Power', weekRange: 'Weeks 17–24', goals: ['Plyometric introduction', 'Running program', 'Sport-specific movements', 'Symmetry >90%'] },
+  { number: 5, name: 'Return to Sport',       weekRange: 'Weeks 25–52', goals: ['Full sport participation', 'Psychological readiness', 'ACL Re-injury prevention program'] },
+]
+
+const EXERCISES_BY_PHASE = {
+  2: [
+    { name: 'Heel Slides',                      sets: 3, reps: '15',    frequency: 'Daily',    difficulty: 'Easy'   },
+    { name: 'Quad Sets (isometric)',             sets: 3, reps: '20',    frequency: 'Daily',    difficulty: 'Easy'   },
+    { name: 'Straight Leg Raises',              sets: 3, reps: '15',    frequency: 'Daily',    difficulty: 'Easy'   },
+    { name: 'Stationary Bike (low resistance)', sets: 1, reps: '20 min', frequency: '5×/week', difficulty: 'Easy'   },
+    { name: 'Calf Raises (bilateral)',          sets: 3, reps: '20',    frequency: '3×/week', difficulty: 'Easy'   },
+    { name: 'Short Arc Quads',                  sets: 3, reps: '15',    frequency: '3×/week', difficulty: 'Easy'   },
+  ],
+  3: [
+    { name: 'Leg Press (single leg)',            sets: 3, reps: '12–15',   frequency: '3×/week', difficulty: 'Medium' },
+    { name: 'Romanian Deadlift',                 sets: 3, reps: '10–12',   frequency: '3×/week', difficulty: 'Medium' },
+    { name: 'Step-ups (8" box)',                 sets: 3, reps: '15',       frequency: '3×/week', difficulty: 'Easy'   },
+    { name: 'Terminal Knee Extensions',          sets: 3, reps: '20',       frequency: 'Daily',   difficulty: 'Easy'   },
+    { name: 'Single-leg Balance (Bosu)',         sets: 3, reps: '30s',      frequency: '3×/week', difficulty: 'Medium' },
+    { name: 'Lateral Band Walks',               sets: 3, reps: '15 each',  frequency: '3×/week', difficulty: 'Easy'   },
+    { name: 'Nordic Hamstring Curls',           sets: 3, reps: '8',        frequency: '2×/week', difficulty: 'Hard'   },
+  ],
+  4: [
+    { name: 'Box Jumps (bilateral)',             sets: 3, reps: '8',       frequency: '3×/week', difficulty: 'Hard'   },
+    { name: 'Single-leg Hop (lateral)',          sets: 3, reps: '10 each', frequency: '3×/week', difficulty: 'Hard'   },
+    { name: 'Running Intervals',                sets: 1, reps: '30 min',  frequency: '4×/week', difficulty: 'Medium' },
+    { name: 'Agility Ladder Drills',            sets: 3, reps: '2 passes', frequency: '3×/week', difficulty: 'Medium' },
+    { name: 'Reverse Lunges (weighted)',        sets: 3, reps: '12',      frequency: '3×/week', difficulty: 'Medium' },
+    { name: 'Nordic Hamstring Curls',           sets: 3, reps: '10',      frequency: '2×/week', difficulty: 'Hard'   },
+    { name: 'Lateral Shuffle Drills',           sets: 3, reps: '30s',     frequency: '3×/week', difficulty: 'Medium' },
+  ],
+}
+
+function buildRehabPhases(currentPhaseNumber) {
+  return PHASE_DEFS.map(def => ({
+    ...def,
+    status: def.number < currentPhaseNumber ? 'completed' : def.number === currentPhaseNumber ? 'current' : 'upcoming',
+    ...(def.number === currentPhaseNumber ? { exercises: EXERCISES_BY_PHASE[currentPhaseNumber] } : {}),
+  }))
+}
+
+export const rehabPhaseMap = {
+  'alex-chen-001':    buildRehabPhases(3),
+  'marcus-webb-002':  buildRehabPhases(2),
+  'priya-sharma-003': buildRehabPhases(4),
+}

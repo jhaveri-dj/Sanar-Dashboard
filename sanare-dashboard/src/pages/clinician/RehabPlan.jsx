@@ -1,6 +1,7 @@
+import { useParams } from 'react-router-dom'
 import ClinicianLayout from '../../components/clinician/ClinicianLayout'
-import { rehabPhases } from '../../data/clinicianData'
-import { currentPatient } from '../../data/patients'
+import { rehabPhaseMap } from '../../data/clinicianData'
+import { patients } from '../../data/patients'
 
 const DIFFICULTY_COLORS = {
   Easy:   { bg: '#10B98115', text: '#10B981', border: '#10B98130' },
@@ -14,10 +15,11 @@ const PHASE_STATUS_STYLES = {
   upcoming:  { ring: '#374151', bg: '#1F293750', text: '#6B7280', dot: '#374151' },
 }
 
-const currentPhaseData = rehabPhases.find(p => p.status === 'current')
-
 export default function RehabPlan() {
-  const p = currentPatient
+  const { id } = useParams()
+  const p = patients.find(pt => pt.id === id) || patients[0]
+  const rehabPhases = rehabPhaseMap[p.id] || rehabPhaseMap['alex-chen-001']
+  const currentPhaseData = rehabPhases.find(ph => ph.status === 'current')
 
   return (
     <ClinicianLayout>
@@ -119,7 +121,7 @@ export default function RehabPlan() {
         <div className="bg-[#111827] rounded-lg p-6 border border-white/5">
           <div className="flex items-center justify-between mb-5">
             <div>
-              <h2 className="text-[#F9FAFB] font-semibold text-base">Phase 3 Exercise Protocol</h2>
+              <h2 className="text-[#F9FAFB] font-semibold text-base">Phase {currentPhaseData.number} Exercise Protocol</h2>
               <p className="text-[#6B7280] text-xs mt-0.5">{currentPhaseData.exercises.length} exercises · {currentPhaseData.weekRange}</p>
             </div>
           </div>

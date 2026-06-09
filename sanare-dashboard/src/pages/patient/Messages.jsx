@@ -66,7 +66,7 @@ export default function Messages() {
   return (
     <PatientLayout>
       {/* Fixed header inside the scrollable content area */}
-      <div className="sticky top-0 z-20 bg-white border-b border-[#E5E5E5] px-5 py-4">
+      <div className="sticky top-11 z-20 bg-white border-b border-[#E5E5E5] px-5 py-4">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#3B82F6] to-[#1D4ED8] flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
             SM

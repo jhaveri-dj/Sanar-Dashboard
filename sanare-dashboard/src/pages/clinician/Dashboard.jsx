@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import ClinicianLayout from '../../components/clinician/ClinicianLayout'
 import { patients } from '../../data/patients'
-import { patientDataMap, allAlerts } from '../../data/clinicianData'
+import { patientDataMap } from '../../data/clinicianData'
 
 function getAdherenceColor(pct) {
   if (pct >= 80) return '#10B981'
@@ -21,9 +21,11 @@ function getRiskLabel(score) {
   return 'High'
 }
 
-const criticalAlerts = allAlerts.filter(a => a.severity === 'red')
-
 export default function Dashboard() {
+  const patientsNeedingReview = patients
+    .filter(p => patientDataMap[p.id].alerts.length > 0)
+    .sort((a, b) => patientDataMap[b.id].currentWeekSummary.riskScore - patientDataMap[a.id].currentWeekSummary.riskScore)
+
   return (
     <ClinicianLayout>
       <div className="p-6 md:p-8">
@@ -37,8 +39,8 @@ export default function Dashboard() {
           </p>
         </div>
 
-        {/* Alert banner */}
-        {criticalAlerts.length > 0 && (
+        {/* Patients Requiring Review banner */}
+        {patientsNeedingReview.length > 0 && (
           <div className="mb-6 bg-[#EF4444]/10 border border-[#EF4444]/30 rounded-xl px-5 py-4">
             <div className="flex items-start gap-4">
               <div className="w-8 h-8 rounded-full bg-[#EF4444]/20 flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -47,15 +49,26 @@ export default function Dashboard() {
                 </svg>
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-[#EF4444] font-semibold text-sm">
-                  {criticalAlerts.length} critical alert{criticalAlerts.length > 1 ? 's' : ''} require attention
-                </p>
-                <div className="flex flex-wrap gap-2 mt-2">
-                  {criticalAlerts.map(a => (
-                    <span key={a.id} className="text-[#FCA5A5] text-xs bg-[#EF4444]/10 border border-[#EF4444]/20 px-2 py-0.5 rounded-full">
-                      {a.patientName} · {a.category}
-                    </span>
-                  ))}
+                <p className="text-[#EF4444] font-semibold text-sm mb-2">Patients Requiring Review</p>
+                <div className="flex flex-col gap-2">
+                  {patientsNeedingReview.map(p => {
+                    const d = patientDataMap[p.id]
+                    const alertCount = d.alerts.length
+                    const risk = d.currentWeekSummary.riskScore
+                    return (
+                      <div key={p.id} className="flex items-center gap-3 flex-wrap">
+                        <Link
+                          to={`/clinician/patient/${p.id}`}
+                          className="text-[#FCA5A5] text-xs bg-[#EF4444]/10 border border-[#EF4444]/20 px-2.5 py-0.5 rounded-full hover:bg-[#EF4444]/20 transition-colors"
+                        >
+                          {p.name}
+                        </Link>
+                        <span className="text-[#9CA3AF] text-xs">{alertCount} flag{alertCount > 1 ? 's' : ''}</span>
+                        <span className="text-[#6B7280] text-xs">·</span>
+                        <span className="text-[#EF4444] text-xs font-medium">Risk score {risk}</span>
+                      </div>
+                    )
+                  })}
                 </div>
               </div>
               <Link to="/clinician/alerts" className="text-[#EF4444] text-xs font-semibold hover:underline flex-shrink-0 whitespace-nowrap">

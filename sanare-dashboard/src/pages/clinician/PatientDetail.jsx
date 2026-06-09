@@ -1,4 +1,4 @@
-import { Fragment } from 'react'
+import { Fragment, useState, useRef, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import {
   ComposedChart, LineChart, BarChart,
@@ -10,6 +10,35 @@ import ClinicianLayout from '../../components/clinician/ClinicianLayout'
 import AnatomyHeatmap from '../../components/clinician/AnatomyHeatmap'
 import { patients } from '../../data/patients'
 import { patientDataMap } from '../../data/clinicianData'
+
+const INITIAL_MESSAGES = [
+  {
+    id: 1,
+    sender: 'dr_mitchell',
+    text: "Hi Alex, great work this week! ROM hit 118° — that's your personal best. The terminal knee extensions are really paying off.",
+    time: 'Jun 3, 10:42 AM',
+  },
+  {
+    id: 2,
+    sender: 'patient',
+    text: "Thanks Dr. Mitchell! Should I increase the weight on single-leg press? It's been feeling easier at 45lbs.",
+    time: 'Jun 3, 11:15 AM',
+  },
+  {
+    id: 3,
+    sender: 'dr_mitchell',
+    text: "Yes, go up to 60lbs for 3×12. Keep the TKEs daily — 3 sets of 20. See you Saturday for your Week 12 eval. Looking strong!",
+    time: 'Jun 3, 11:22 AM',
+  },
+]
+
+function SendIcon() {
+  return (
+    <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+    </svg>
+  )
+}
 
 function getRiskColor(score) {
   if (score <= 25) return '#10B981'
@@ -177,6 +206,31 @@ export default function PatientDetail() {
   const patient = patients.find(p => p.id === id) || patients[0]
   const data = patientDataMap[patient.id] || patientDataMap[patients[0].id]
   const { weeklyData, sessionLog, currentWeekSummary: s } = data
+
+  const [clinicianMessages, setClinicianMessages] = useState(INITIAL_MESSAGES)
+  const [clinicianDraft, setClinicianDraft] = useState('')
+  const messagesBottomRef = useRef(null)
+
+  useEffect(() => {
+    messagesBottomRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [clinicianMessages])
+
+  function sendClinicianMessage() {
+    const text = clinicianDraft.trim()
+    if (!text) return
+    setClinicianMessages(prev => [
+      ...prev,
+      { id: prev.length + 1, sender: 'dr_mitchell', text, time: new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }) },
+    ])
+    setClinicianDraft('')
+  }
+
+  function handleClinicianKeyDown(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault()
+      sendClinicianMessage()
+    }
+  }
 
   const chartData = weeklyData.map(w => ({
     week:        w.label,
@@ -437,7 +491,7 @@ export default function PatientDetail() {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-white/5">
-                    {['Date', 'Duration', 'ROM', 'Avg Activation', 'Pain Score'].map(h => (
+                    {['Date', 'Duration', 'ROM', 'Avg Activation'].map(h => (
                       <th key={h} className="text-left text-[#6B7280] text-xs font-medium uppercase tracking-wider pb-3 pr-4">{h}</th>
                     ))}
                   </tr>
@@ -460,22 +514,83 @@ export default function PatientDetail() {
                           <span className="text-[#9CA3AF] text-xs">{row.avgActivation}%</span>
                         </div>
                       </td>
-                      <td className="py-3">
-                        <span
-                          className="text-xs font-semibold px-2 py-0.5 rounded-full"
-                          style={{
-                            color: row.painScore <= 2 ? '#10B981' : row.painScore <= 4 ? '#F59E0B' : '#EF4444',
-                            backgroundColor: row.painScore <= 2 ? '#10B98115' : row.painScore <= 4 ? '#F59E0B15' : '#EF444415',
-                          }}
-                        >
-                          {row.painScore} / 10
-                        </span>
-                      </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
+          </div>
+        </div>
+
+        {/* ── Clinician Messaging ── */}
+        <div className="bg-[#111827] rounded-lg border border-white/5 overflow-hidden">
+          {/* Header */}
+          <div className="px-6 py-4 border-b border-white/5 flex items-center gap-3">
+            <div className={`w-8 h-8 rounded-full bg-gradient-to-br ${patient.avatarColor} flex items-center justify-center text-white font-bold text-xs flex-shrink-0`}>
+              {patient.initials}
+            </div>
+            <div>
+              <h2 className="text-[#F9FAFB] font-semibold text-sm">Messaging — {patient.name}</h2>
+              <p className="text-[#6B7280] text-xs">Secure patient–clinician channel · RTM (CPT 98980)</p>
+            </div>
+          </div>
+
+          {/* Messages */}
+          <div className="h-72 overflow-y-auto px-6 py-4 space-y-4">
+            <div className="flex items-center gap-3">
+              <div className="flex-1 h-px bg-white/5"/>
+              <span className="text-[#4B5563] text-xs font-medium">June 3</span>
+              <div className="flex-1 h-px bg-white/5"/>
+            </div>
+
+            {clinicianMessages.map(msg => {
+              const isClinician = msg.sender === 'dr_mitchell'
+              return (
+                <div key={msg.id} className={`flex flex-col ${isClinician ? 'items-end' : 'items-start'}`}>
+                  {!isClinician && (
+                    <div className="flex items-center gap-2 mb-1">
+                      <div className={`w-6 h-6 rounded-full bg-gradient-to-br ${patient.avatarColor} flex items-center justify-center text-white font-bold text-[9px] flex-shrink-0`}>
+                        {patient.initials}
+                      </div>
+                      <span className="text-[#6B7280] text-xs font-medium">{patient.name}</span>
+                    </div>
+                  )}
+                  <div
+                    className={`max-w-[70%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
+                      isClinician
+                        ? 'bg-[#3B82F6] text-white rounded-tr-sm'
+                        : 'bg-[#1F2937] text-[#E5E7EB] rounded-tl-sm'
+                    }`}
+                  >
+                    {msg.text}
+                  </div>
+                  <p className={`text-[10px] text-[#4B5563] mt-1 ${isClinician ? 'mr-1' : 'ml-1'}`}>{msg.time}</p>
+                </div>
+              )
+            })}
+            <div ref={messagesBottomRef}/>
+          </div>
+
+          {/* Input */}
+          <div className="px-6 py-4 border-t border-white/5 flex items-end gap-2">
+            <textarea
+              value={clinicianDraft}
+              onChange={e => setClinicianDraft(e.target.value)}
+              onKeyDown={handleClinicianKeyDown}
+              placeholder={`Message ${patient.name}...`}
+              rows={1}
+              className="flex-1 bg-[#0A0F1E] border border-white/10 rounded-xl px-4 py-2.5 text-sm text-[#F9FAFB] placeholder-[#4B5563] resize-none outline-none focus:border-[#3B82F6]/50 transition-colors leading-relaxed"
+              style={{ minHeight: '42px', maxHeight: '120px', overflow: 'auto' }}
+            />
+            <button
+              onClick={sendClinicianMessage}
+              disabled={!clinicianDraft.trim()}
+              className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 transition-colors ${
+                clinicianDraft.trim() ? 'bg-[#3B82F6] text-white' : 'bg-white/5 text-[#4B5563]'
+              }`}
+            >
+              <SendIcon/>
+            </button>
           </div>
         </div>
 
