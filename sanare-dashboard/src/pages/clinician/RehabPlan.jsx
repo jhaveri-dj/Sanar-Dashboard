@@ -4,16 +4,26 @@ import { rehabPhaseMap } from '../../data/clinicianData'
 import { patients } from '../../data/patients'
 
 const DIFFICULTY_COLORS = {
-  Easy:   { bg: '#10B98115', text: '#10B981', border: '#10B98130' },
-  Medium: { bg: '#F59E0B15', text: '#F59E0B', border: '#F59E0B30' },
-  Hard:   { bg: '#EF444415', text: '#EF4444', border: '#EF444430' },
+  Easy:   { bg: 'rgba(16,185,129,0.12)', text: '#10B981', border: 'rgba(16,185,129,0.3)' },
+  Medium: { bg: 'rgba(245,158,11,0.12)', text: '#F59E0B', border: 'rgba(245,158,11,0.3)' },
+  Hard:   { bg: 'rgba(239,68,68,0.12)',  text: '#EF4444', border: 'rgba(239,68,68,0.3)' },
 }
 
 const PHASE_STATUS_STYLES = {
-  completed: { ring: '#10B981', bg: '#10B98120', text: '#10B981', dot: '#10B981' },
-  current:   { ring: '#3B82F6', bg: '#3B82F620', text: '#3B82F6', dot: '#3B82F6' },
-  upcoming:  { ring: '#374151', bg: '#1F293750', text: '#6B7280', dot: '#374151' },
+  completed: { ring: '#10B981', bg: 'rgba(16,185,129,0.15)', text: '#34D399' },
+  current:   { ring: '#3B82F6', bg: 'rgba(59,130,246,0.18)', text: '#60A5FA' },
+  upcoming:  { ring: '#374151', bg: 'rgba(255,255,255,0.04)', text: '#94A3B8' },
 }
+
+const CARD = {
+  background: 'linear-gradient(180deg, #1C2333 0%, #161C2A 100%)',
+  border: '1px solid rgba(255,255,255,0.1)',
+  borderRadius: 16,
+  padding: '24px 26px',
+  boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.06), 0 4px 24px rgba(0,0,0,0.4)',
+}
+const EYEBROW = { color: '#60A5FA', fontSize: 12, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', margin: '0 0 6px' }
+const TITLE   = { color: 'white', fontSize: 21, fontWeight: 700, letterSpacing: '-0.3px', margin: 0 }
 
 export default function RehabPlan() {
   const { id } = useParams()
@@ -23,90 +33,68 @@ export default function RehabPlan() {
 
   return (
     <ClinicianLayout>
-      <div className="p-6 md:p-8 max-w-5xl space-y-6">
+      <div style={{ maxWidth: 1000, margin: '0 auto', padding: '28px 32px 64px' }}>
 
         {/* Header */}
-        <div>
-          <p className="text-[#6B7280] text-sm mb-1">{p.name} · Week {p.weekInRecovery}</p>
-          <h1 className="text-[#F9FAFB] text-2xl font-bold tracking-tight">Rehabilitation Plan</h1>
+        <div style={{ marginBottom: 24 }}>
+          <p style={EYEBROW}>{p.name} · Week {p.weekInRecovery}</p>
+          <h1 style={{ color: '#F9FAFB', fontSize: 28, fontWeight: 800, letterSpacing: '-0.5px', margin: 0 }}>Rehabilitation Plan</h1>
         </div>
 
         {/* Current phase highlight */}
-        <div className="bg-[#3B82F6]/10 border border-[#3B82F6]/25 rounded-lg p-6">
-          <div className="flex items-start gap-4 flex-wrap">
-            <div className="w-14 h-14 rounded-lg bg-[#3B82F6]/20 border border-[#3B82F6]/30 flex items-center justify-center flex-shrink-0">
-              <span className="text-[#3B82F6] font-black text-xl">P{currentPhaseData.number}</span>
-            </div>
-            <div className="flex-1">
-              <div className="flex items-center gap-3 flex-wrap mb-1">
-                <h2 className="text-[#F9FAFB] text-xl font-bold">
-                  Phase {currentPhaseData.number} — {currentPhaseData.name}
-                </h2>
-                <span className="bg-[#3B82F6]/20 text-[#3B82F6] text-xs font-semibold px-3 py-1 rounded-full border border-[#3B82F6]/30">
-                  Current Phase
-                </span>
+        <div style={{ position: 'relative', marginBottom: 20 }}>
+          <div style={{ position: 'absolute', inset: 0, borderRadius: 24, background: 'radial-gradient(ellipse 70% 80% at 50% 0%, rgba(59,130,246,0.16), transparent 70%)', pointerEvents: 'none', filter: 'blur(20px)' }}/>
+          <div style={{ position: 'relative', background: 'linear-gradient(160deg, #16243F 0%, #141C2D 55%, #11141E 100%)', border: '1px solid rgba(59,130,246,0.22)', borderRadius: 20, padding: '26px 30px', boxShadow: '0 0 40px rgba(59,130,246,0.1), inset 0 1px 0 rgba(255,255,255,0.05)' }}>
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: 18, flexWrap: 'wrap' }}>
+              <div style={{ width: 56, height: 56, borderRadius: 14, background: 'rgba(59,130,246,0.2)', border: '1px solid rgba(59,130,246,0.35)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                <span style={{ color: '#60A5FA', fontWeight: 900, fontSize: 22 }}>P{currentPhaseData.number}</span>
               </div>
-              <p className="text-[#6B7280] text-sm">{currentPhaseData.weekRange}</p>
-              <div className="flex flex-wrap gap-2 mt-3">
-                {currentPhaseData.goals.map(goal => (
-                  <span key={goal} className="text-xs bg-white/5 border border-white/10 text-[#9CA3AF] px-3 py-1 rounded-full">
-                    {goal}
-                  </span>
-                ))}
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap', marginBottom: 4 }}>
+                  <h2 style={{ color: '#F9FAFB', fontSize: 21, fontWeight: 800, letterSpacing: '-0.3px', margin: 0 }}>Phase {currentPhaseData.number}: {currentPhaseData.name}</h2>
+                  <span style={{ background: 'rgba(59,130,246,0.2)', color: '#93C5FD', fontSize: 12, fontWeight: 700, padding: '4px 12px', borderRadius: 999, border: '1px solid rgba(59,130,246,0.3)' }}>Current Phase</span>
+                </div>
+                <p style={{ color: '#9CA3AF', fontSize: 14, fontWeight: 500, margin: 0 }}>{currentPhaseData.weekRange}</p>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 14 }}>
+                  {currentPhaseData.goals.map(goal => (
+                    <span key={goal} style={{ fontSize: 13, fontWeight: 500, background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', color: '#CBD5E1', padding: '5px 13px', borderRadius: 999 }}>{goal}</span>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Phase timeline */}
-        <div className="bg-[#111827] rounded-lg p-6 border border-white/5">
-          <h2 className="text-[#F9FAFB] font-semibold text-base mb-6">Recovery Roadmap</h2>
-          <div className="relative">
-            {/* Connector line */}
-            <div className="absolute left-5 top-5 bottom-5 w-0.5 bg-[#1F2937]" />
-
-            <div className="space-y-4">
-              {rehabPhases.map((phase, i) => {
-                const styles = PHASE_STATUS_STYLES[phase.status]
+        {/* Recovery Roadmap */}
+        <div style={{ ...CARD, marginBottom: 20 }}>
+          <div style={{ marginBottom: 22 }}>
+            <p style={EYEBROW}>Phase Progression</p>
+            <h2 style={TITLE}>Recovery Roadmap</h2>
+          </div>
+          <div style={{ position: 'relative' }}>
+            <div style={{ position: 'absolute', left: 19, top: 20, bottom: 20, width: 2, background: 'rgba(255,255,255,0.1)' }}/>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+              {rehabPhases.map(phase => {
+                const st = PHASE_STATUS_STYLES[phase.status]
                 return (
-                  <div key={phase.number} className="flex gap-4 relative">
-                    {/* Status dot */}
-                    <div
-                      className="w-10 h-10 rounded-full border-2 flex items-center justify-center flex-shrink-0 z-10"
-                      style={{ borderColor: styles.ring, backgroundColor: styles.bg }}
-                    >
+                  <div key={phase.number} style={{ display: 'flex', gap: 16, position: 'relative' }}>
+                    <div style={{ width: 40, height: 40, borderRadius: '50%', border: `2px solid ${st.ring}`, background: st.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, zIndex: 1 }}>
                       {phase.status === 'completed' ? (
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10B981" strokeWidth={2.5}>
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/>
-                        </svg>
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#34D399" strokeWidth={2.6}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/></svg>
                       ) : phase.status === 'current' ? (
-                        <div className="w-3 h-3 rounded-full animate-pulse" style={{ backgroundColor: styles.dot }}/>
+                        <div style={{ width: 12, height: 12, borderRadius: '50%', background: '#3B82F6' }} className="animate-pulse"/>
                       ) : (
-                        <span className="text-[#4B5563] text-xs font-bold">{phase.number}</span>
+                        <span style={{ color: '#94A3B8', fontSize: 13, fontWeight: 700 }}>{phase.number}</span>
                       )}
                     </div>
-
-                    {/* Phase info */}
-                    <div
-                      className={`flex-1 rounded-xl p-4 border transition-all ${
-                        phase.status === 'current'
-                          ? 'bg-[#3B82F6]/5 border-[#3B82F6]/20'
-                          : phase.status === 'completed'
-                          ? 'bg-[#10B981]/5 border-[#10B981]/15'
-                          : 'bg-[#0A0F1E] border-white/5'
-                      }`}
-                    >
-                      <div className="flex items-center justify-between flex-wrap gap-2 mb-1">
-                        <p className="font-semibold text-sm" style={{ color: styles.text }}>
-                          Phase {phase.number} — {phase.name}
-                        </p>
-                        <span className="text-[#6B7280] text-xs">{phase.weekRange}</span>
+                    <div style={{ flex: 1, borderRadius: 12, padding: 16, background: phase.status === 'current' ? 'rgba(59,130,246,0.08)' : phase.status === 'completed' ? 'rgba(16,185,129,0.06)' : 'rgba(255,255,255,0.03)', border: `1px solid ${phase.status === 'current' ? 'rgba(59,130,246,0.25)' : phase.status === 'completed' ? 'rgba(16,185,129,0.18)' : 'rgba(255,255,255,0.07)'}` }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 8, marginBottom: 6 }}>
+                        <p style={{ color: st.text, fontSize: 15, fontWeight: 700, margin: 0 }}>Phase {phase.number}: {phase.name}</p>
+                        <span style={{ color: '#9CA3AF', fontSize: 13, fontWeight: 500 }}>{phase.weekRange}</span>
                       </div>
-                      <div className="flex flex-wrap gap-1.5 mt-2">
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 7, marginTop: 8 }}>
                         {phase.goals.map(goal => (
-                          <span key={goal} className="text-xs text-[#6B7280] bg-white/5 px-2 py-0.5 rounded">
-                            {goal}
-                          </span>
+                          <span key={goal} style={{ fontSize: 12, fontWeight: 500, color: '#CBD5E1', background: 'rgba(255,255,255,0.05)', padding: '3px 10px', borderRadius: 7 }}>{goal}</span>
                         ))}
                       </div>
                     </div>
@@ -117,42 +105,33 @@ export default function RehabPlan() {
           </div>
         </div>
 
-        {/* Exercise list */}
-        <div className="bg-[#111827] rounded-lg p-6 border border-white/5">
-          <div className="flex items-center justify-between mb-5">
-            <div>
-              <h2 className="text-[#F9FAFB] font-semibold text-base">Phase {currentPhaseData.number} Exercise Protocol</h2>
-              <p className="text-[#6B7280] text-xs mt-0.5">{currentPhaseData.exercises.length} exercises · {currentPhaseData.weekRange}</p>
-            </div>
+        {/* Exercise Protocol */}
+        <div style={{ ...CARD, marginBottom: 20 }}>
+          <div style={{ marginBottom: 20 }}>
+            <p style={EYEBROW}>Prescribed Exercises</p>
+            <h2 style={TITLE}>Phase {currentPhaseData.number} Protocol</h2>
+            <p style={{ color: '#9CA3AF', fontSize: 13, fontWeight: 500, margin: '6px 0 0' }}>{currentPhaseData.exercises.length} exercises · {currentPhaseData.weekRange}</p>
           </div>
-
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
+          <div style={{ overflowX: 'auto' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14 }}>
               <thead>
-                <tr className="border-b border-white/5">
+                <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
                   {['Exercise', 'Sets', 'Reps', 'Frequency', 'Difficulty'].map(h => (
-                    <th key={h} className="text-left text-[#6B7280] text-xs font-medium uppercase tracking-wider pb-3 pr-6 whitespace-nowrap">
-                      {h}
-                    </th>
+                    <th key={h} style={{ textAlign: 'left', color: '#9CA3AF', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', paddingBottom: 12, paddingRight: 24, whiteSpace: 'nowrap' }}>{h}</th>
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/5">
+              <tbody>
                 {currentPhaseData.exercises.map((ex, i) => {
                   const dc = DIFFICULTY_COLORS[ex.difficulty]
                   return (
-                    <tr key={i} className="hover:bg-white/2 transition">
-                      <td className="py-3.5 pr-6 text-[#F9FAFB] text-sm font-medium whitespace-nowrap">{ex.name}</td>
-                      <td className="py-3.5 pr-6 text-[#9CA3AF] text-sm">{ex.sets}</td>
-                      <td className="py-3.5 pr-6 text-[#9CA3AF] text-sm">{ex.reps}</td>
-                      <td className="py-3.5 pr-6 text-[#9CA3AF] text-sm whitespace-nowrap">{ex.frequency}</td>
-                      <td className="py-3.5">
-                        <span
-                          className="text-xs font-semibold px-2.5 py-1 rounded-full border"
-                          style={{ color: dc.text, backgroundColor: dc.bg, borderColor: dc.border }}
-                        >
-                          {ex.difficulty}
-                        </span>
+                    <tr key={i} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                      <td style={{ padding: '14px 24px 14px 0', color: '#F9FAFB', fontSize: 14, fontWeight: 600, whiteSpace: 'nowrap' }}>{ex.name}</td>
+                      <td style={{ padding: '14px 24px 14px 0', color: '#CBD5E1', fontSize: 14 }}>{ex.sets}</td>
+                      <td style={{ padding: '14px 24px 14px 0', color: '#CBD5E1', fontSize: 14 }}>{ex.reps}</td>
+                      <td style={{ padding: '14px 24px 14px 0', color: '#CBD5E1', fontSize: 14, whiteSpace: 'nowrap' }}>{ex.frequency}</td>
+                      <td style={{ padding: '14px 0' }}>
+                        <span style={{ fontSize: 12, fontWeight: 700, padding: '4px 11px', borderRadius: 999, color: dc.text, background: dc.bg, border: `1px solid ${dc.border}` }}>{ex.difficulty}</span>
                       </td>
                     </tr>
                   )
@@ -162,13 +141,16 @@ export default function RehabPlan() {
           </div>
         </div>
 
-        {/* Clinical notes */}
-        <div className="bg-[#111827] rounded-lg p-6 border border-white/5">
-          <h2 className="text-[#F9FAFB] font-semibold text-base mb-3">Clinical Notes</h2>
-          <div className="bg-[#0A0F1E] rounded-xl p-4 border border-white/5">
-            <p className="text-[#9CA3AF] text-sm leading-relaxed">{p.notes}</p>
+        {/* Clinical Notes */}
+        <div style={CARD}>
+          <div style={{ marginBottom: 16 }}>
+            <p style={EYEBROW}>Clinical Note</p>
+            <h2 style={TITLE}>Notes</h2>
           </div>
-          <p className="text-[#4B5563] text-xs mt-3">Read-only — notes updated by Sarah Mitchell</p>
+          <div style={{ borderLeft: '2px solid rgba(59,130,246,0.4)', paddingLeft: 18 }}>
+            <p style={{ color: '#D1D5DB', fontSize: 14, lineHeight: 1.8, margin: 0 }}>{p.notes}</p>
+          </div>
+          <p style={{ color: '#94A3B8', fontSize: 12, margin: '14px 0 0' }}>Read-only · Notes updated by Sarah Mitchell</p>
         </div>
 
       </div>

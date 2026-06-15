@@ -32,11 +32,11 @@ export default function SurgeonLayout({ children }) {
   }
 
   return (
-    <div className="min-h-screen bg-[#0A0F1E] flex">
+    <div className="min-h-screen bg-[#060810] flex">
       <DemoBadge />
 
       {/* Desktop sidebar */}
-      <aside className="w-60 fixed inset-y-0 left-0 bg-[#070B14] border-r border-[#1F2937] flex-col z-40 hidden md:flex">
+      <aside className="w-60 fixed inset-y-0 left-0 bg-[#0A0E1A] border-r border-[#1F2937] flex-col z-40 hidden md:flex">
         {/* Logo */}
         <div className="h-16 px-5 flex items-center border-b border-[#1F2937] flex-shrink-0">
           <div className="flex items-center gap-3">
@@ -96,7 +96,7 @@ export default function SurgeonLayout({ children }) {
       </aside>
 
       {/* Mobile top bar */}
-      <div className="md:hidden fixed top-0 left-0 right-0 h-14 bg-[#070B14] border-b border-[#1F2937] flex items-center justify-between px-4 z-40">
+      <div className="md:hidden fixed top-0 left-0 right-0 h-14 bg-[#0A0E1A] border-b border-[#1F2937] flex items-center justify-between px-4 z-40">
         <div className="flex items-center gap-2">
           <div className="w-7 h-7 rounded-lg bg-[#8B5CF6] flex items-center justify-center">
             <svg width="13" height="13" viewBox="0 0 16 16" fill="none">

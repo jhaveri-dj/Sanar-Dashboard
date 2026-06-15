@@ -3,37 +3,38 @@ import { Link } from 'react-router-dom'
 import ClinicianLayout from '../../components/clinician/ClinicianLayout'
 import { allAlerts } from '../../data/clinicianData'
 
-const SEVERITY_STYLES = {
-  red:    { bg: '#EF444415', border: '#EF444430', badge: '#EF4444', badgeBg: '#EF444420', label: 'Critical', icon: '#EF4444' },
-  yellow: { bg: '#F59E0B10', border: '#F59E0B25', badge: '#F59E0B', badgeBg: '#F59E0B15', label: 'Warning',  icon: '#F59E0B' },
+const SEVERITY = {
+  red:    { bg: 'rgba(239,68,68,0.1)',  border: 'rgba(239,68,68,0.3)',  color: '#EF4444', label: 'Critical' },
+  yellow: { bg: 'rgba(245,158,11,0.1)', border: 'rgba(245,158,11,0.3)', color: '#F59E0B', label: 'Warning' },
 }
-
 const CATEGORY_COLORS = {
-  EMG:       { bg: '#8B5CF615', text: '#8B5CF6' },
-  Adherence: { bg: '#3B82F615', text: '#3B82F6' },
-  ROM:       { bg: '#10B98115', text: '#10B981' },
-  Pain:      { bg: '#F59E0B15', text: '#F59E0B' },
-  Symmetry:  { bg: '#EF444415', text: '#EF4444' },
-  Dropout:   { bg: '#F9731615', text: '#F97316' },
+  EMG:       { bg: 'rgba(139,92,246,0.15)', text: '#A78BFA' },
+  Adherence: { bg: 'rgba(59,130,246,0.15)', text: '#60A5FA' },
+  ROM:       { bg: 'rgba(16,185,129,0.15)', text: '#34D399' },
+  Pain:      { bg: 'rgba(245,158,11,0.15)', text: '#FBBF24' },
+  Symmetry:  { bg: 'rgba(239,68,68,0.15)',  text: '#FCA5A5' },
+  Dropout:   { bg: 'rgba(249,115,22,0.15)', text: '#FDBA74' },
 }
-
 const PATIENT_COLORS = {
-  'alex-chen-001':    { bg: '#3B82F615', text: '#60A5FA' },
-  'marcus-webb-002':  { bg: '#EF444415', text: '#FCA5A5' },
-  'priya-sharma-003': { bg: '#10B98115', text: '#34D399' },
+  'alex-chen-001':    { bg: 'rgba(59,130,246,0.15)', text: '#60A5FA' },
+  'marcus-webb-002':  { bg: 'rgba(239,68,68,0.15)',  text: '#FCA5A5' },
+  'priya-sharma-003': { bg: 'rgba(16,185,129,0.15)', text: '#34D399' },
 }
 
 function AlertIcon({ severity }) {
-  if (severity === 'red') return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#EF4444" strokeWidth={2}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
-    </svg>
-  )
+  const c = severity === 'red' ? '#EF4444' : '#F59E0B'
   return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" strokeWidth={2}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth={2.2}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
     </svg>
   )
+}
+
+const CARD = {
+  background: 'linear-gradient(180deg, #1C2333 0%, #161C2A 100%)',
+  border: '1px solid rgba(255,255,255,0.1)',
+  borderRadius: 16,
+  boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.06), 0 4px 24px rgba(0,0,0,0.4)',
 }
 
 export default function Alerts() {
@@ -51,154 +52,99 @@ export default function Alerts() {
       return next
     })
   }
-
   function dismiss(id) {
     setDismissed(prev => new Set([...prev, id]))
   }
 
   return (
     <ClinicianLayout>
-      <div className="p-6 md:p-8 max-w-4xl space-y-6">
+      <div style={{ maxWidth: 880, margin: '0 auto', padding: '28px 32px 64px' }}>
 
         {/* Header */}
-        <div className="flex items-start justify-between flex-wrap gap-3">
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12, marginBottom: 10 }}>
           <div>
-            <h1 className="text-[#F9FAFB] text-2xl font-bold tracking-tight">Alerts Inbox</h1>
-            <p className="text-[#6B7280] text-sm mt-1">All patients · {activeAlerts.length} active alert{activeAlerts.length !== 1 ? 's' : ''}</p>
+            <p style={{ color: '#60A5FA', fontSize: 12, fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', margin: '0 0 6px' }}>Monitoring</p>
+            <h1 style={{ color: '#F9FAFB', fontSize: 28, fontWeight: 800, letterSpacing: '-0.5px', margin: 0 }}>Alerts Inbox</h1>
+            <p style={{ color: '#9CA3AF', fontSize: 14, fontWeight: 500, margin: '6px 0 0' }}>All patients · {activeAlerts.length} active alert{activeAlerts.length !== 1 ? 's' : ''}</p>
           </div>
-          <div className="flex gap-3 flex-wrap">
+          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
             {redCount > 0 && (
-              <div className="flex items-center gap-2 bg-[#EF444415] border border-[#EF444430] rounded-xl px-4 py-2">
-                <div className="w-2 h-2 rounded-full bg-[#EF4444] animate-pulse"/>
-                <span className="text-[#EF4444] font-semibold text-sm">{redCount} critical</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'rgba(239,68,68,0.12)', border: '1px solid rgba(239,68,68,0.3)', borderRadius: 12, padding: '9px 16px' }}>
+                <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#EF4444' }} className="animate-pulse"/>
+                <span style={{ color: '#EF4444', fontWeight: 700, fontSize: 14 }}>{redCount} critical</span>
               </div>
             )}
             {yellowCount > 0 && (
-              <div className="flex items-center gap-2 bg-[#F59E0B10] border border-[#F59E0B25] rounded-xl px-4 py-2">
-                <div className="w-2 h-2 rounded-full bg-[#F59E0B]"/>
-                <span className="text-[#F59E0B] font-semibold text-sm">{yellowCount} warning</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, background: 'rgba(245,158,11,0.12)', border: '1px solid rgba(245,158,11,0.3)', borderRadius: 12, padding: '9px 16px' }}>
+                <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#F59E0B' }}/>
+                <span style={{ color: '#F59E0B', fontWeight: 700, fontSize: 14 }}>{yellowCount} warning</span>
               </div>
             )}
           </div>
         </div>
 
-        <p className="text-[#4B5563] text-xs">Critical alerts shown first. Click to expand details and recommended actions.</p>
+        <p style={{ color: '#94A3B8', fontSize: 13, margin: '0 0 22px' }}>Critical alerts shown first. Click any alert to expand details and recommended actions.</p>
 
         {/* Alert list */}
         {activeAlerts.length === 0 ? (
-          <div className="bg-[#111827] rounded-lg p-12 border border-white/5 flex flex-col items-center text-center">
-            <div className="w-12 h-12 rounded-full bg-[#10B981]/15 flex items-center justify-center mb-3">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#10B981" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/>
-              </svg>
+          <div style={{ ...CARD, padding: 48, display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
+            <div style={{ width: 48, height: 48, borderRadius: '50%', background: 'rgba(16,185,129,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 12 }}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#10B981" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/></svg>
             </div>
-            <p className="text-[#F9FAFB] font-semibold mb-1">All clear</p>
-            <p className="text-[#6B7280] text-sm">No active alerts across all patients.</p>
+            <p style={{ color: '#F9FAFB', fontWeight: 700, fontSize: 16, margin: '0 0 4px' }}>All clear</p>
+            <p style={{ color: '#9CA3AF', fontSize: 14 }}>No active alerts across all patients.</p>
           </div>
         ) : (
-          <div className="space-y-3">
-            {[...activeAlerts]
-              .sort((a, b) => (a.severity === 'red' ? -1 : 1))
-              .map(alert => {
-                const sv = SEVERITY_STYLES[alert.severity]
-                const cat = CATEGORY_COLORS[alert.category] || { bg: '#1F293750', text: '#9CA3AF' }
-                const ptColor = PATIENT_COLORS[alert.patientId] || { bg: '#1F293750', text: '#9CA3AF' }
-                const isExpanded = expanded.has(alert.id)
-
-                return (
-                  <div
-                    key={alert.id}
-                    className="rounded-lg border overflow-hidden transition-all"
-                    style={{ backgroundColor: sv.bg, borderColor: sv.border }}
-                  >
-                    {/* Header — click to expand */}
-                    <button
-                      className="w-full flex items-start gap-4 p-5 text-left"
-                      onClick={() => toggleExpand(alert.id)}
-                    >
-                      <div
-                        className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5"
-                        style={{ backgroundColor: sv.badgeBg }}
-                      >
-                        <AlertIcon severity={alert.severity} />
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            {[...activeAlerts].sort((a, b) => (a.severity === 'red' ? -1 : 1)).map(alert => {
+              const sv = SEVERITY[alert.severity]
+              const cat = CATEGORY_COLORS[alert.category] || { bg: 'rgba(255,255,255,0.05)', text: '#9CA3AF' }
+              const ptColor = PATIENT_COLORS[alert.patientId] || { bg: 'rgba(255,255,255,0.05)', text: '#9CA3AF' }
+              const isExpanded = expanded.has(alert.id)
+              return (
+                <div key={alert.id} style={{ ...CARD, borderLeft: `3px solid ${sv.color}`, overflow: 'hidden' }}>
+                  <button onClick={() => toggleExpand(alert.id)} style={{ width: '100%', display: 'flex', alignItems: 'flex-start', gap: 16, padding: 20, textAlign: 'left', background: 'transparent', border: 'none', cursor: 'pointer' }}>
+                    <div style={{ width: 38, height: 38, borderRadius: 11, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2, background: sv.bg, border: `1px solid ${sv.border}` }}>
+                      <AlertIcon severity={alert.severity}/>
+                    </div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', marginBottom: 6 }}>
+                        <span style={{ fontSize: 12, fontWeight: 700, padding: '3px 10px', borderRadius: 999, color: sv.color, background: sv.bg, border: `1px solid ${sv.border}` }}>{sv.label}</span>
+                        <span style={{ fontSize: 12, fontWeight: 700, padding: '3px 10px', borderRadius: 999, color: ptColor.text, background: ptColor.bg }}>{alert.patientName}</span>
+                        <span style={{ fontSize: 12, fontWeight: 600, padding: '3px 10px', borderRadius: 999, color: cat.text, background: cat.bg }}>{alert.category}</span>
+                        <span style={{ color: '#94A3B8', fontSize: 12, marginLeft: 'auto' }}>
+                          {new Date(alert.timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} {new Date(alert.timestamp).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}
+                        </span>
                       </div>
+                      <p style={{ color: '#F9FAFB', fontWeight: 700, fontSize: 15, margin: 0 }}>{alert.title}</p>
+                      <p style={{ color: '#CBD5E1', fontSize: 13, fontWeight: 500, margin: '4px 0 0', lineHeight: 1.6 }}>{alert.message}</p>
+                    </div>
+                    <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="#94A3B8" strokeWidth={2} style={{ flexShrink: 0, marginTop: 4, transform: isExpanded ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7"/>
+                    </svg>
+                  </button>
 
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 flex-wrap mb-1">
-                          <span
-                            className="text-xs font-bold px-2 py-0.5 rounded-full"
-                            style={{ color: sv.badge, backgroundColor: sv.badgeBg }}
-                          >
-                            {sv.label}
-                          </span>
-                          {/* Patient name badge */}
-                          <span
-                            className="text-xs font-semibold px-2 py-0.5 rounded-full"
-                            style={{ color: ptColor.text, backgroundColor: ptColor.bg }}
-                          >
-                            {alert.patientName}
-                          </span>
-                          <span
-                            className="text-xs font-medium px-2 py-0.5 rounded-full"
-                            style={{ color: cat.text, backgroundColor: cat.bg }}
-                          >
-                            {alert.category}
-                          </span>
-                          <span className="text-[#6B7280] text-xs ml-auto">
-                            {new Date(alert.timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-                            {' '}
-                            {new Date(alert.timestamp).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}
-                          </span>
-                        </div>
-                        <p className="text-[#F9FAFB] font-semibold text-sm">{alert.title}</p>
-                        <p className="text-[#9CA3AF] text-xs mt-0.5 leading-relaxed">{alert.message}</p>
+                  {isExpanded && (
+                    <div style={{ padding: '0 20px 20px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+                      <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 12, padding: 16, marginTop: 14 }}>
+                        <p style={{ color: '#9CA3AF', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 8px' }}>Recommended Action</p>
+                        <p style={{ color: '#F3F4F6', fontSize: 14, fontWeight: 500, lineHeight: 1.6, margin: 0 }}>{alert.recommendedAction}</p>
                       </div>
-
-                      <svg
-                        width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="#6B7280" strokeWidth={2}
-                        className={`flex-shrink-0 mt-1 transition-transform ${isExpanded ? 'rotate-180' : ''}`}
-                      >
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7"/>
-                      </svg>
-                    </button>
-
-                    {/* Expanded: recommended action */}
-                    {isExpanded && (
-                      <div className="px-5 pb-5 pt-0 border-t border-white/5">
-                        <div className="bg-[#111827] rounded-xl p-4 mt-3">
-                          <p className="text-[#6B7280] text-xs font-medium uppercase tracking-wider mb-2">Recommended Action</p>
-                          <p className="text-[#F9FAFB] text-sm leading-relaxed">{alert.recommendedAction}</p>
-                        </div>
-                        <div className="flex gap-2 mt-3">
-                          <button
-                            onClick={() => dismiss(alert.id)}
-                            className="text-xs text-[#6B7280] hover:text-white bg-white/5 hover:bg-white/10 px-3 py-1.5 rounded-lg transition"
-                          >
-                            Dismiss
-                          </button>
-                          <button className="text-xs bg-[#3B82F6]/15 hover:bg-[#3B82F6]/25 text-[#3B82F6] border border-[#3B82F6]/25 px-3 py-1.5 rounded-lg transition font-medium">
-                            Mark Reviewed
-                          </button>
-                          <Link
-                            to={`/clinician/patient/${alert.patientId}`}
-                            className="text-xs bg-white/5 hover:bg-white/10 text-[#9CA3AF] hover:text-white px-3 py-1.5 rounded-lg transition ml-auto"
-                          >
-                            View patient →
-                          </Link>
-                        </div>
+                      <div style={{ display: 'flex', gap: 8, marginTop: 14 }}>
+                        <button onClick={() => dismiss(alert.id)} style={{ fontSize: 13, fontWeight: 600, color: '#CBD5E1', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', padding: '7px 14px', borderRadius: 9, cursor: 'pointer' }} className="hover:bg-white/10">Dismiss</button>
+                        <button style={{ fontSize: 13, fontWeight: 600, color: '#60A5FA', background: 'rgba(59,130,246,0.15)', border: '1px solid rgba(59,130,246,0.3)', padding: '7px 14px', borderRadius: 9, cursor: 'pointer' }} className="hover:bg-[#3B82F6]/25">Mark Reviewed</button>
+                        <Link to={`/clinician/patient/${alert.patientId}`} style={{ fontSize: 13, fontWeight: 600, color: '#CBD5E1', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', padding: '7px 14px', borderRadius: 9, marginLeft: 'auto', textDecoration: 'none' }} className="hover:bg-white/10">View patient →</Link>
                       </div>
-                    )}
-                  </div>
-                )
-              })}
+                    </div>
+                  )}
+                </div>
+              )
+            })}
           </div>
         )}
 
         {dismissed.size > 0 && (
-          <button
-            onClick={() => setDismissed(new Set())}
-            className="text-xs text-[#6B7280] hover:text-white transition"
-          >
+          <button onClick={() => setDismissed(new Set())} style={{ fontSize: 13, fontWeight: 500, color: '#94A3B8', background: 'transparent', border: 'none', cursor: 'pointer', marginTop: 16 }} className="hover:text-white">
             Restore {dismissed.size} dismissed alert{dismissed.size > 1 ? 's' : ''}
           </button>
         )}

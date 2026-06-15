@@ -11,6 +11,17 @@ import AnatomyHeatmap from '../../components/clinician/AnatomyHeatmap'
 import { patients } from '../../data/patients'
 import { patientDataMap } from '../../data/clinicianData'
 
+
+const CARD = {
+  background: 'linear-gradient(180deg, #1C2333 0%, #161C2A 100%)',
+  border: '1px solid rgba(255,255,255,0.1)',
+  boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.06), 0 4px 24px rgba(0,0,0,0.4)',
+}
+const INNER = {
+  background: 'rgba(255,255,255,0.04)',
+  border: '1px solid rgba(255,255,255,0.07)',
+}
+
 const INITIAL_MESSAGES = [
   {
     id: 1,
@@ -40,16 +51,6 @@ function SendIcon() {
   )
 }
 
-function getRiskColor(score) {
-  if (score <= 25) return '#10B981'
-  if (score <= 50) return '#F59E0B'
-  return '#EF4444'
-}
-function getRiskLabel(score) {
-  if (score <= 25) return 'Low Risk'
-  if (score <= 50) return 'Moderate Risk'
-  return 'High Risk'
-}
 function getAdherenceColor(pct) {
   if (pct >= 80) return '#10B981'
   if (pct >= 65) return '#F59E0B'
@@ -123,11 +124,11 @@ function TrajectoryTimeline({ patient }) {
   }
 
   return (
-    <div className="bg-[#111827] rounded-lg p-6 border border-white/5">
+    <div className="rounded-2xl p-6" style={CARD}>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h2 className="text-[#F9FAFB] font-semibold text-base">Recovery Trajectory</h2>
-          <p className="text-[#6B7280] text-xs mt-0.5">
+          <h2 className="text-white font-bold text-lg tracking-tight">Recovery Trajectory</h2>
+          <p className="text-[#9CA3AF] text-xs mt-0.5">
             Week {week} of 52 · Projected RTS: {patient.projectedRTSDate}
           </p>
         </div>
@@ -245,9 +246,6 @@ export default function PatientDetail() {
   }))
 
   const currentEmg = weeklyData.at(-1).emg
-  const lastExpected = weeklyData.at(-1).rom.expected
-  const romPct = Math.round((s.rom / lastExpected) * 100)
-  const riskScore = s.riskScore
 
   const statCards = [
     { label: 'Current ROM',        value: `${s.rom}°`,                current: s.rom,                previous: s.romPrevWeek,             unit: '°',  sub: 'Range of motion',        color: '#3B82F6' },
@@ -269,8 +267,8 @@ export default function PatientDetail() {
             {patient.initials}
           </div>
           <div>
-            <h1 className="text-[#F9FAFB] text-xl font-bold tracking-tight">{patient.name}</h1>
-            <p className="text-[#6B7280] text-sm">
+            <h1 className="text-[#F9FAFB] text-2xl font-bold tracking-tight">{patient.name}</h1>
+            <p className="text-[#9CA3AF] text-sm font-medium">
               {patient.age}y · Week {patient.weekInRecovery} · {patient.currentPhase.name} · {patient.graftType} · {patient.affectedLeg} knee
             </p>
           </div>
@@ -290,21 +288,21 @@ export default function PatientDetail() {
         {/* ── Stat cards ── */}
         <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
           {statCards.map(({ label, value, current, previous, unit, sub, color }) => (
-            <div key={label} className="bg-[#111827] rounded-lg p-5 border border-white/5">
-              <p className="text-[#6B7280] text-xs font-medium uppercase tracking-wider mb-3">{label}</p>
+            <div key={label} className="rounded-2xl p-5" style={CARD}>
+              <p className="text-[#9CA3AF] text-xs font-semibold uppercase tracking-wider mb-3">{label}</p>
               <p className="text-3xl font-bold mb-1" style={{ color }}>{value}</p>
-              <p className="text-[#6B7280] text-xs mb-2">{sub}</p>
+              <p className="text-[#9CA3AF] text-xs mb-2">{sub}</p>
               <TrendArrow current={current} previous={previous} unit={unit}/>
             </div>
           ))}
         </div>
 
         {/* ── ROM Trend Chart ── */}
-        <div className="bg-[#111827] rounded-lg p-6 border border-white/5">
+        <div className="rounded-2xl p-6" style={CARD}>
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h2 className="text-[#F9FAFB] font-semibold text-base">ROM Recovery Trend</h2>
-              <p className="text-[#6B7280] text-xs mt-0.5">Range of motion — actual vs expected protocol</p>
+              <h2 className="text-white font-bold text-lg tracking-tight">ROM Recovery Trend</h2>
+              <p className="text-[#9CA3AF] text-xs mt-0.5">Range of motion — actual vs expected protocol</p>
             </div>
             <div className="flex gap-4 text-xs">
               <div className="flex items-center gap-1.5"><div className="w-3 h-0.5 bg-[#3B82F6] rounded"/><span className="text-[#9CA3AF]">Actual</span></div>
@@ -336,11 +334,11 @@ export default function PatientDetail() {
         </div>
 
         {/* ── EMG Muscle Activation Chart ── */}
-        <div className="bg-[#111827] rounded-lg p-6 border border-white/5">
+        <div className="rounded-2xl p-6" style={CARD}>
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h2 className="text-[#F9FAFB] font-semibold text-base">EMG Muscle Activation</h2>
-              <p className="text-[#6B7280] text-xs mt-0.5">% of Maximum Voluntary Isometric Contraction (MVIC)</p>
+              <h2 className="text-white font-bold text-lg tracking-tight">EMG Muscle Activation</h2>
+              <p className="text-[#9CA3AF] text-xs mt-0.5">% of Maximum Voluntary Isometric Contraction (MVIC)</p>
             </div>
             <div className="hidden md:flex flex-wrap gap-3 text-xs">
               {[
@@ -383,18 +381,18 @@ export default function PatientDetail() {
 
         {/* ── Anatomy Heatmap + Adherence Chart ── */}
         <div className="grid grid-cols-2 gap-6">
-          <div className="bg-[#111827] rounded-lg p-6 border border-white/5">
+          <div className="rounded-2xl p-6" style={CARD}>
             <div className="mb-5">
-              <h2 className="text-[#F9FAFB] font-semibold text-base">Anatomy Activation Map</h2>
-              <p className="text-[#6B7280] text-xs mt-0.5">Week {patient.weekInRecovery} — click a zone for details</p>
+              <h2 className="text-white font-bold text-lg tracking-tight">Anatomy Activation Map</h2>
+              <p className="text-[#9CA3AF] text-xs mt-0.5">Week {patient.weekInRecovery} — click a zone for details</p>
             </div>
             <AnatomyHeatmap muscles={currentEmg}/>
           </div>
 
-          <div className="bg-[#111827] rounded-lg p-6 border border-white/5">
+          <div className="rounded-2xl p-6" style={CARD}>
             <div className="mb-5">
-              <h2 className="text-[#F9FAFB] font-semibold text-base">Weekly Adherence</h2>
-              <p className="text-[#6B7280] text-xs mt-0.5">Session completion rate by week</p>
+              <h2 className="text-white font-bold text-lg tracking-tight">Weekly Adherence</h2>
+              <p className="text-[#9CA3AF] text-xs mt-0.5">Session completion rate by week</p>
             </div>
             <div style={{ height: 200 }}>
               <ResponsiveContainer width="100%" height="100%">
@@ -438,56 +436,12 @@ export default function PatientDetail() {
           </div>
         </div>
 
-        {/* ── Risk Score + Session Log ── */}
-        <div className="grid md:grid-cols-3 gap-6">
-          {/* Risk Score Panel */}
-          <div className="bg-[#111827] rounded-lg p-6 border border-white/5">
-            <h2 className="text-[#F9FAFB] font-semibold text-base mb-1">Predictive Risk Score</h2>
-            <p className="text-[#6B7280] text-xs mb-5">Composite of ROM, adherence & symmetry</p>
-
-            <div className="flex flex-col items-center mb-6">
-              <div
-                className="w-28 h-28 rounded-full border-4 flex items-center justify-center mb-2"
-                style={{ borderColor: getRiskColor(riskScore) }}
-              >
-                <div className="text-center">
-                  <p className="text-4xl font-bold" style={{ color: getRiskColor(riskScore) }}>{riskScore}</p>
-                  <p className="text-[#6B7280] text-xs">/ 100</p>
-                </div>
-              </div>
-              <p className="font-semibold text-sm" style={{ color: getRiskColor(riskScore) }}>
-                {getRiskLabel(riskScore)}
-              </p>
-              <p className="text-[#6B7280] text-xs mt-1">Lower = better outcome</p>
-            </div>
-
-            <div className="space-y-3">
-              {[
-                { label: 'Symmetry Gap',     pts: Math.round((100 - s.symmetryIndex) * 0.4), detail: `${s.symmetryIndex}% index`    },
-                { label: 'Adherence Deficit',pts: Math.round((100 - s.adherence) * 0.35),    detail: `${s.adherence}% this week`    },
-                { label: 'ROM vs Target',    pts: Math.round((100 - Math.min(romPct,100)) * 0.25), detail: `${romPct}% of expected` },
-              ].map(({ label, pts, detail }) => (
-                <div key={label} className="bg-[#0A0F1E] rounded-xl px-4 py-3">
-                  <div className="flex justify-between items-center mb-1">
-                    <span className="text-[#9CA3AF] text-xs font-medium">{label}</span>
-                    <span className="text-white font-bold text-sm">{pts} pts</span>
-                  </div>
-                  <div className="w-full bg-[#1F2937] rounded-full h-1.5">
-                    <div
-                      className="h-1.5 rounded-full"
-                      style={{ width: `${Math.min(pts * 4, 100)}%`, backgroundColor: getRiskColor(pts * 4) }}
-                    />
-                  </div>
-                  <p className="text-[#6B7280] text-xs mt-1">{detail}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-
+        {/* ── Session Log ── */}
+        <div>
           {/* Session Log Table */}
-          <div className="md:col-span-2 bg-[#111827] rounded-lg p-6 border border-white/5">
+          <div className="rounded-2xl p-6" style={CARD}>
             <h2 className="text-[#F9FAFB] font-semibold text-base mb-1">Weekly Session Log</h2>
-            <p className="text-[#6B7280] text-xs mb-5">Last {sessionLog.length} sessions</p>
+            <p className="text-[#9CA3AF] text-xs mb-5">Last {sessionLog.length} sessions</p>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
@@ -524,7 +478,7 @@ export default function PatientDetail() {
         </div>
 
         {/* ── Clinician Messaging ── */}
-        <div className="bg-[#111827] rounded-lg border border-white/5 overflow-hidden">
+        <div className="rounded-2xl overflow-hidden" style={CARD}>
           {/* Header */}
           <div className="px-6 py-4 border-b border-white/5 flex items-center gap-3">
             <div className={`w-8 h-8 rounded-full bg-gradient-to-br ${patient.avatarColor} flex items-center justify-center text-white font-bold text-xs flex-shrink-0`}>

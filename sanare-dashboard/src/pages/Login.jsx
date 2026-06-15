@@ -1,6 +1,8 @@
 import { useNavigate } from 'react-router-dom'
+import { Stethoscope, ClipboardList, User } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
-import DemoBadge from '../components/shared/DemoBadge'
+import hero from '../assets/hero.png'
+import sanarelogo from '../assets/sanare-logo.png'
 
 export default function Login() {
   const { selectRole } = useAuth()
@@ -13,94 +15,104 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0A0F1E] flex flex-col items-center justify-center px-4">
-      <DemoBadge />
+    <div className="relative w-full h-screen overflow-hidden">
+      <img
+        src={hero}
+        alt=""
+        className="absolute inset-0 w-full h-full object-cover object-center"
+      />
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{ background: 'linear-gradient(to right, rgba(8,10,18,0.92) 0%, rgba(8,10,18,0.75) 35%, rgba(8,10,18,0.2) 70%, transparent 100%)' }}
+      />
+      <div className="relative z-10">
+        <div
+          style={{
+            minHeight: '100vh',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            padding: '48px',
+            maxWidth: '50%',
+          }}
+        >
+          <img src={sanarelogo} alt="Sanaré" className="w-56 h-auto mb-6" />
+          <h1 className="text-5xl font-bold text-white tracking-tight leading-none mb-1">
+            Movement is medicine<span className="text-blue-500">.</span>
+          </h1>
+          <p className="text-lg font-normal text-slate-200 mb-7">We make sure none of it goes unseen.</p>
 
-      {/* Logo + wordmark */}
-      <div className="mb-10 text-center">
-        <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-[#3B82F6] mb-5 shadow-xl shadow-blue-500/30">
-          <svg width="32" height="32" viewBox="0 0 28 28" fill="none">
-            <path d="M14 4C9.58 4 6 7.58 6 12c0 5.25 8 15 8 15s8-9.75 8-15c0-4.42-3.58-8-8-8z" fill="white" opacity="0.9"/>
-            <circle cx="14" cy="12" r="3" fill="white"/>
-          </svg>
+          <div className="flex flex-col gap-2">
+            <button
+              onClick={() => enter('clinician')}
+              className="w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:border-blue-500/30 transition-colors duration-150 text-left"
+              style={{
+                background: 'rgba(10,12,20,0.6)',
+                backdropFilter: 'blur(8px)',
+                border: '1px solid rgba(255,255,255,0.1)',
+              }}
+            >
+              <div className="w-8 h-8 rounded-md bg-blue-500/10 flex items-center justify-center shrink-0">
+                <ClipboardList size={16} className="text-blue-500" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-base font-semibold text-white leading-tight">Physiotherapist Dashboard</p>
+                <p className="text-sm text-slate-300 mt-0.5">Sarah Mitchell · PT, DPT, SCS</p>
+              </div>
+              <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} className="shrink-0 text-slate-700">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7"/>
+              </svg>
+            </button>
+
+            <button
+              onClick={() => enter('patient')}
+              className="w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:border-blue-500/30 transition-colors duration-150 text-left"
+              style={{
+                background: 'rgba(10,12,20,0.6)',
+                backdropFilter: 'blur(8px)',
+                border: '1px solid rgba(255,255,255,0.1)',
+              }}
+            >
+              <div className="w-8 h-8 rounded-md bg-blue-500/10 flex items-center justify-center shrink-0">
+                <User size={16} className="text-blue-500" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-base font-semibold text-white leading-tight">Patient Dashboard</p>
+                <p className="text-sm text-slate-300 mt-0.5">Alex Chen · Week 12 Recovery</p>
+              </div>
+              <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} className="shrink-0 text-slate-700">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7"/>
+              </svg>
+            </button>
+
+            <button
+              onClick={() => enter('surgeon')}
+              className="w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:border-blue-500/30 transition-colors duration-150 text-left"
+              style={{
+                background: 'rgba(10,12,20,0.6)',
+                backdropFilter: 'blur(8px)',
+                border: '1px solid rgba(255,255,255,0.1)',
+              }}
+            >
+              <div className="w-8 h-8 rounded-md bg-blue-500/10 flex items-center justify-center shrink-0">
+                <Stethoscope size={16} className="text-blue-500" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-base font-semibold text-white leading-tight">Surgeon Portal</p>
+                <p className="text-sm text-slate-300 mt-0.5">Dr. James Ortiz · Orthopedic Surgeon</p>
+              </div>
+              <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} className="shrink-0 text-slate-700">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7"/>
+              </svg>
+            </button>
+          </div>
         </div>
-        <h1 className="text-3xl font-black text-white tracking-tight">Sanaré</h1>
-        <p className="text-[#6B7280] text-sm mt-1.5">ACL Rehabilitation Platform</p>
+
+        {/* Footer disclaimer */}
+        <p className="absolute bottom-10 left-12 text-[10px] text-slate-500">
+          All data is synthetic · For demonstration purposes only
+        </p>
       </div>
-
-      {/* Role selector */}
-      <div className="w-full max-w-sm">
-        <p className="text-[#4B5563] text-xs text-center uppercase tracking-widest mb-4">Select a portal to continue</p>
-
-        <div className="space-y-3">
-          {/* Clinician card */}
-          <button
-            onClick={() => enter('clinician')}
-            className="w-full bg-[#111827] hover:bg-[#1F2937] active:scale-[0.98] border border-white/10 hover:border-[#3B82F6]/40 rounded-2xl p-6 text-left transition-[background-color,border-color,transform] duration-150 group"
-          >
-            <div className="flex items-center gap-4">
-              <div className="w-11 h-11 rounded-xl bg-[#3B82F6]/15 border border-[#3B82F6]/25 flex items-center justify-center flex-shrink-0 group-hover:bg-[#3B82F6]/25 transition-colors duration-150">
-                <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#3B82F6" strokeWidth={1.8}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
-                </svg>
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-white font-bold text-base leading-tight">Clinician Dashboard</p>
-                <p className="text-[#6B7280] text-xs mt-0.5">Sarah Mitchell · PT, DPT, SCS</p>
-              </div>
-              <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="#4B5563" strokeWidth={2} className="flex-shrink-0 group-hover:stroke-[#3B82F6] transition-colors duration-150">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7"/>
-              </svg>
-            </div>
-          </button>
-
-          {/* Patient card */}
-          <button
-            onClick={() => enter('patient')}
-            className="w-full bg-[#111827] hover:bg-[#1F2937] active:scale-[0.98] border border-white/10 hover:border-[#10B981]/40 rounded-2xl p-6 text-left transition-[background-color,border-color,transform] duration-150 group"
-          >
-            <div className="flex items-center gap-4">
-              <div className="w-11 h-11 rounded-xl bg-[#10B981]/15 border border-[#10B981]/25 flex items-center justify-center flex-shrink-0 group-hover:bg-[#10B981]/25 transition-colors duration-150">
-                <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#10B981" strokeWidth={1.8}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                </svg>
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-white font-bold text-base leading-tight">Patient Dashboard</p>
-                <p className="text-[#6B7280] text-xs mt-0.5">Alex Chen · Week 12 Recovery</p>
-              </div>
-              <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="#4B5563" strokeWidth={2} className="flex-shrink-0 group-hover:stroke-[#10B981] transition-colors duration-150">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7"/>
-              </svg>
-            </div>
-          </button>
-
-          {/* Surgeon card */}
-          <button
-            onClick={() => enter('surgeon')}
-            className="w-full bg-[#111827] hover:bg-[#1F2937] active:scale-[0.98] border border-white/10 hover:border-[#8B5CF6]/40 rounded-2xl p-6 text-left transition-[background-color,border-color,transform] duration-150 group"
-          >
-            <div className="flex items-center gap-4">
-              <div className="w-11 h-11 rounded-xl bg-[#8B5CF6]/15 border border-[#8B5CF6]/25 flex items-center justify-center flex-shrink-0 group-hover:bg-[#8B5CF6]/25 transition-colors duration-150">
-                <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#8B5CF6" strokeWidth={1.8}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2v-4M9 21H5a2 2 0 01-2-2v-4m0 0h18"/>
-                </svg>
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-white font-bold text-base leading-tight">Surgeon Portal</p>
-                <p className="text-[#6B7280] text-xs mt-0.5">Dr. James Ortiz · Orthopedic Surgeon</p>
-              </div>
-              <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="#4B5563" strokeWidth={2} className="flex-shrink-0 group-hover:stroke-[#8B5CF6] transition-colors duration-150">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7"/>
-              </svg>
-            </div>
-          </button>
-        </div>
-      </div>
-
-      <p className="mt-8 text-xs text-[#4B5563] text-center">
-        All data is synthetic. For demonstration purposes only.
-      </p>
     </div>
   )
 }
