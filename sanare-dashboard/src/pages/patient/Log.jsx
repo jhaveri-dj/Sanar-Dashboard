@@ -1,204 +1,259 @@
 import { useState } from 'react'
 import PatientLayout from '../../components/patient/PatientLayout'
-import { exerciseLog, heatmapData } from '../../data/patientData'
+import { exerciseLog } from '../../data/patientData'
 
-const DIFFICULTY_STYLES = {
-  Easy:   { bg: '#ECFDF5', text: '#10B981', border: '#A7F3D0' },
-  Medium: { bg: '#FFFBEB', text: '#F59E0B', border: '#FDE68A' },
-  Hard:   { bg: '#FEF2F2', text: '#EF4444', border: '#FECACA' },
+const CARD = {
+  background: 'linear-gradient(180deg, #1C2333 0%, #161C2A 100%)',
+  border: '1px solid rgba(255,255,255,0.1)',
+  boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.06)',
 }
 
-const HEATMAP_COLORS = {
-  0: { bg: '#F3F4F6', label: 'Missed' },
-  1: { bg: '#86EFAC', label: 'Partial' },
-  2: { bg: '#10B981', label: 'Complete' },
+function painColor(v) {
+  if (v <= 3) return '#10B981'
+  if (v <= 6) return '#F59E0B'
+  return '#EF4444'
 }
 
-const DAY_LABELS = ['S', 'M', 'T', 'W', 'T', 'F', 'S']
+function painEmoji(v) {
+  if (v === 0) return '😊'
+  if (v <= 3) return '🙂'
+  if (v <= 6) return '😐'
+  if (v <= 8) return '😣'
+  return '🤕'
+}
 
-const todayLog = exerciseLog[0]
+const PAST_LOGS = exerciseLog.slice(1, 6).map((day, i) => {
+  const done = day.exercises.filter(e => e.completed).length
+  const total = day.exercises.length
+  const completion = done === total ? 'Yes' : done >= Math.ceil(total / 2) ? 'Partial' : 'No'
+  const pains = [2, 3, 4, 2, 6]
+  const feelings = ['Strong', 'Okay', 'Okay', 'Strong', 'Struggled']
+  return { date: day.date, pain: pains[i], completion, feeling: feelings[i] }
+})
 
-// Compute weekly session stats (last 7 days in data)
-const thisWeekDays = exerciseLog.slice(0, 5)
-const completedSessions = thisWeekDays.filter(day =>
-  day.exercises.filter(e => e.completed).length >= 3
-).length
-const prescribedSessions = 5
+const COMPLETION_OPTIONS = [
+  { value: 'Yes',     label: '✓  Yes — all done',        activeColor: '#10B981', activeBg: 'rgba(16,185,129,0.12)', activeBorder: 'rgba(16,185,129,0.35)' },
+  { value: 'Partial', label: '~  Partial',                activeColor: '#F59E0B', activeBg: 'rgba(245,158,11,0.12)', activeBorder: 'rgba(245,158,11,0.35)' },
+  { value: 'No',      label: '✕  No — missed today',     activeColor: '#EF4444', activeBg: 'rgba(239,68,68,0.12)',  activeBorder: 'rgba(239,68,68,0.35)'  },
+]
+
+const FEELING_OPTIONS = [
+  { value: 'Strong',    emoji: '💪', label: 'Strong',    activeColor: '#10B981', activeBg: 'rgba(16,185,129,0.12)', activeBorder: 'rgba(16,185,129,0.35)' },
+  { value: 'Okay',      emoji: '😐', label: 'Okay',      activeColor: '#F59E0B', activeBg: 'rgba(245,158,11,0.12)', activeBorder: 'rgba(245,158,11,0.35)' },
+  { value: 'Struggled', emoji: '😓', label: 'Struggled', activeColor: '#EF4444', activeBg: 'rgba(239,68,68,0.12)',  activeBorder: 'rgba(239,68,68,0.35)'  },
+]
 
 export default function Log() {
-  const [checked, setChecked] = useState(
-    () => new Set(
-      todayLog.exercises
-        .map((ex, i) => ex.completed ? i : null)
-        .filter(i => i !== null)
-    )
-  )
+  const [pain, setPain] = useState(3)
+  const [completion, setCompletion] = useState(null)
+  const [feeling, setFeeling] = useState(null)
+  const [notes, setNotes] = useState('')
+  const [submitted, setSubmitted] = useState(false)
+  const [history, setHistory] = useState(PAST_LOGS)
 
-  function toggleExercise(i) {
-    setChecked(prev => {
-      const next = new Set(prev)
-      next.has(i) ? next.delete(i) : next.add(i)
-      return next
-    })
+  function handleSubmit() {
+    const today = new Date().toISOString().split('T')[0]
+    setHistory(prev => [{ date: today, pain, completion, feeling }, ...prev.slice(0, 4)])
+    setPain(3)
+    setCompletion(null)
+    setFeeling(null)
+    setNotes('')
+    setSubmitted(true)
+    setTimeout(() => setSubmitted(false), 2500)
   }
 
-  const doneCount = checked.size
-  const totalCount = todayLog.exercises.length
+  const canSubmit = completion !== null && feeling !== null
+  const color = painColor(pain)
 
   return (
     <PatientLayout>
-      <div className="px-5 pt-8 space-y-5">
+      <style>{`
+        .pain-range { -webkit-appearance: none; appearance: none; width: 100%; background: transparent; cursor: pointer; }
+        .pain-range::-webkit-slider-runnable-track { background: rgba(255,255,255,0.08); height: 6px; border-radius: 3px; }
+        .pain-range::-webkit-slider-thumb { -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%; background: var(--thumb-color, #3B82F6); margin-top: -8px; cursor: pointer; box-shadow: 0 0 0 4px rgba(59,130,246,0.18); transition: background 0.2s; }
+        .pain-range::-moz-range-track { background: rgba(255,255,255,0.08); height: 6px; border-radius: 3px; }
+        .pain-range::-moz-range-thumb { width: 22px; height: 22px; border-radius: 50%; background: var(--thumb-color, #3B82F6); border: none; cursor: pointer; }
+      `}</style>
 
-        {/* Header */}
-        <div>
-          <p className="text-gray-400 text-sm font-medium">
-            {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
-          </p>
-          <h1 className="text-[#1E3A5F] text-2xl font-bold tracking-tight mt-0.5">Exercise Log</h1>
-        </div>
+      <div className="p-8">
+        <div className="max-w-[1100px] mx-auto space-y-6">
 
-        {/* Today's progress pill */}
-        <div className="bg-white rounded-2xl px-5 py-3.5 shadow-sm border border-gray-50 flex items-center gap-4">
-          <div className="relative w-12 h-12 flex-shrink-0">
-            <svg viewBox="0 0 48 48" className="w-12 h-12 -rotate-90">
-              <circle cx="24" cy="24" r="20" fill="none" stroke="#F3F4F6" strokeWidth="5"/>
-              <circle
-                cx="24" cy="24" r="20" fill="none" stroke="#10B981" strokeWidth="5"
-                strokeLinecap="round"
-                strokeDasharray={125.66}
-                strokeDashoffset={125.66 * (1 - doneCount / totalCount)}
-                style={{ transition: 'stroke-dashoffset 0.4s ease' }}
-              />
-            </svg>
-            <div className="absolute inset-0 flex items-center justify-center">
-              <span className="text-[#1E3A5F] font-bold text-xs">{doneCount}/{totalCount}</span>
-            </div>
-          </div>
+          {/* Header */}
           <div>
-            <p className="text-[#1E3A5F] font-bold text-sm">Today's session</p>
-            <p className="text-gray-400 text-xs mt-0.5">
-              {doneCount === totalCount ? '🎉 All done!' : `${totalCount - doneCount} exercises remaining`}
+            <p className="text-[#9CA3AF] text-sm font-medium">
+              {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
             </p>
+            <h1 className="text-[#F9FAFB] text-3xl font-bold tracking-tight mt-0.5">Today's Log</h1>
           </div>
-          <div className="ml-auto text-right">
-            <p className="text-[#10B981] font-bold text-sm">{Math.round((doneCount / totalCount) * 100)}%</p>
-            <p className="text-gray-400 text-xs">complete</p>
-          </div>
-        </div>
 
-        {/* Exercise checklist */}
-        <div className="bg-white rounded-3xl p-5 shadow-sm border border-gray-50">
-          <h2 className="text-[#1E3A5F] font-bold text-base mb-4">Today's Exercises</h2>
-          <div className="space-y-3">
-            {todayLog.exercises.map((ex, i) => {
-              const done = checked.has(i)
-              const dc = DIFFICULTY_STYLES[ex.difficulty]
-              return (
-                <button
-                  key={i}
-                  onClick={() => toggleExercise(i)}
-                  className={`w-full flex items-center gap-4 p-3.5 rounded-2xl border transition-all text-left ${
-                    done
-                      ? 'bg-[#F0FDF4] border-[#BBF7D0]'
-                      : 'bg-gray-50 border-gray-100 hover:border-gray-200'
-                  }`}
-                >
-                  {/* Checkbox */}
-                  <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-colors ${
-                    done ? 'bg-[#10B981] border-[#10B981]' : 'border-gray-300 bg-white'
-                  }`}>
-                    {done && (
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth={3}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/>
-                      </svg>
-                    )}
+          {submitted && (
+            <div className="rounded-xl px-5 py-4 flex items-center gap-3" style={{ background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.3)' }}>
+              <span className="text-xl">🎉</span>
+              <p className="text-[#10B981] font-semibold">Log saved! Great work today, Alex.</p>
+            </div>
+          )}
+
+          {/* 2-col: form + history */}
+          <div className="grid grid-cols-2 gap-6 items-start">
+
+            {/* Left: logging form */}
+            <div style={CARD} className="rounded-2xl p-6 space-y-6">
+              <h2 className="text-[#F9FAFB] font-bold text-lg">How did today go?</h2>
+
+              {/* Pain slider */}
+              <div>
+                <div className="flex items-center justify-between mb-3">
+                  <label className="text-[#F9FAFB] font-semibold text-sm">How much pain did you feel today?</label>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xl">{painEmoji(pain)}</span>
+                    <span className="font-black text-2xl" style={{ color }}>{pain}</span>
+                    <span className="text-[#9CA3AF] text-sm">/10</span>
                   </div>
-
-                  {/* Exercise info */}
-                  <div className="flex-1 min-w-0">
-                    <p className={`font-semibold text-sm ${done ? 'text-[#065F46] line-through' : 'text-[#1E3A5F]'}`}>
-                      {ex.name}
-                    </p>
-                    <p className="text-gray-400 text-xs mt-0.5">
-                      {ex.sets} sets × {ex.reps} reps · ~{ex.duration} min
-                    </p>
-                  </div>
-
-                  {/* Difficulty badge */}
-                  <span
-                    className="text-xs font-semibold px-2.5 py-1 rounded-full border flex-shrink-0"
-                    style={{ color: dc.text, backgroundColor: dc.bg, borderColor: dc.border }}
-                  >
-                    {ex.difficulty}
-                  </span>
-                </button>
-              )
-            })}
-          </div>
-        </div>
-
-        {/* Weekly completion heatmap */}
-        <div className="bg-white rounded-3xl p-5 shadow-sm border border-gray-50">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-[#1E3A5F] font-bold text-base">8-Week Heatmap</h2>
-            <div className="flex items-center gap-3 text-xs text-gray-400">
-              {Object.entries(HEATMAP_COLORS).map(([val, { bg, label }]) => (
-                <div key={val} className="flex items-center gap-1.5">
-                  <div className="w-3 h-3 rounded-sm" style={{ backgroundColor: bg }}/>
-                  <span>{label}</span>
                 </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="overflow-x-auto">
-            <div className="min-w-max">
-              {/* Day labels */}
-              <div className="flex gap-1 mb-1 ml-14">
-                {DAY_LABELS.map((d, i) => (
-                  <div key={i} className="w-7 text-center text-gray-300 text-xs">{d}</div>
-                ))}
+                <input
+                  type="range"
+                  min="0" max="10" value={pain}
+                  onChange={e => setPain(Number(e.target.value))}
+                  className="pain-range"
+                  style={{ '--thumb-color': color }}
+                />
+                <div className="flex justify-between text-[#9CA3AF] text-xs mt-2">
+                  <span>😊 No pain</span>
+                  <span>😐 Moderate</span>
+                  <span>😣 Severe</span>
+                </div>
               </div>
 
-              {/* Heatmap rows */}
-              <div className="space-y-1">
-                {heatmapData.map((week, wi) => (
-                  <div key={wi} className="flex items-center gap-2">
-                    <span className="text-gray-300 text-xs w-12 text-right pr-2 flex-shrink-0">{week.week}</span>
-                    <div className="flex gap-1">
-                      {week.days.map((val, di) => (
-                        <div
-                          key={di}
-                          className="w-7 h-7 rounded-md transition-transform hover:scale-110"
-                          style={{ backgroundColor: HEATMAP_COLORS[val].bg }}
-                          title={`${week.week} ${DAY_LABELS[di]}: ${HEATMAP_COLORS[val].label}`}
-                        />
-                      ))}
+              {/* Exercise completion */}
+              <div>
+                <label className="text-[#F9FAFB] font-semibold text-sm block mb-3">Did you complete your exercises?</label>
+                <div className="flex flex-col gap-2">
+                  {COMPLETION_OPTIONS.map(({ value, label, activeColor, activeBg, activeBorder }) => {
+                    const isActive = completion === value
+                    return (
+                      <button
+                        key={value}
+                        onClick={() => setCompletion(value)}
+                        className="w-full text-left px-4 rounded-xl font-medium text-sm transition-all"
+                        style={{
+                          minHeight: 48,
+                          color: isActive ? activeColor : '#9CA3AF',
+                          background: isActive ? activeBg : 'rgba(255,255,255,0.03)',
+                          border: `1px solid ${isActive ? activeBorder : 'rgba(255,255,255,0.07)'}`,
+                        }}
+                      >
+                        {label}
+                      </button>
+                    )
+                  })}
+                </div>
+              </div>
+
+              {/* Knee feeling */}
+              <div>
+                <label className="text-[#F9FAFB] font-semibold text-sm block mb-3">How did your knee feel during exercises?</label>
+                <div className="grid grid-cols-3 gap-2">
+                  {FEELING_OPTIONS.map(({ value, emoji, label, activeColor, activeBg, activeBorder }) => {
+                    const isActive = feeling === value
+                    return (
+                      <button
+                        key={value}
+                        onClick={() => setFeeling(value)}
+                        className="flex flex-col items-center gap-1.5 py-3 rounded-xl font-semibold text-xs transition-all"
+                        style={{
+                          minHeight: 64,
+                          color: isActive ? activeColor : '#9CA3AF',
+                          background: isActive ? activeBg : 'rgba(255,255,255,0.03)',
+                          border: `1px solid ${isActive ? activeBorder : 'rgba(255,255,255,0.07)'}`,
+                        }}
+                      >
+                        <span className="text-xl">{emoji}</span>
+                        {label}
+                      </button>
+                    )
+                  })}
+                </div>
+              </div>
+
+              {/* Notes */}
+              <div>
+                <label className="text-[#F9FAFB] font-semibold text-sm block mb-2">Any notes for your PT?</label>
+                <textarea
+                  value={notes}
+                  onChange={e => setNotes(e.target.value)}
+                  placeholder="E.g. 'Felt some tightness behind my knee during squats...'"
+                  rows={3}
+                  className="w-full rounded-xl px-4 py-3 text-sm text-[#F9FAFB] placeholder-[#4B5563] resize-none outline-none transition-colors"
+                  style={{
+                    background: 'rgba(255,255,255,0.04)',
+                    border: '1px solid rgba(255,255,255,0.08)',
+                  }}
+                  onFocus={e => e.target.style.borderColor = 'rgba(59,130,246,0.5)'}
+                  onBlur={e => e.target.style.borderColor = 'rgba(255,255,255,0.08)'}
+                />
+              </div>
+
+              {/* Submit */}
+              <button
+                onClick={handleSubmit}
+                disabled={!canSubmit}
+                className="w-full font-bold text-base rounded-xl transition-all"
+                style={{
+                  minHeight: 52,
+                  background: canSubmit ? '#3B82F6' : 'rgba(255,255,255,0.06)',
+                  color: canSubmit ? '#fff' : '#4B5563',
+                  boxShadow: canSubmit ? '0 4px 16px rgba(59,130,246,0.35)' : 'none',
+                  cursor: canSubmit ? 'pointer' : 'not-allowed',
+                }}
+              >
+                {canSubmit ? 'Save Today\'s Log' : 'Select completion & feeling to save'}
+              </button>
+            </div>
+
+            {/* Right: past session history */}
+            <div style={CARD} className="rounded-2xl p-6">
+              <h2 className="text-[#F9FAFB] font-bold text-lg mb-5">Recent Sessions</h2>
+              <div className="space-y-3">
+                {history.map((log, i) => {
+                  const pc = painColor(log.pain)
+                  const completionColor = log.completion === 'Yes' ? '#10B981' : log.completion === 'Partial' ? '#F59E0B' : '#EF4444'
+                  return (
+                    <div
+                      key={i}
+                      className="flex items-center gap-4 px-4 py-3.5 rounded-xl"
+                      style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}
+                    >
+                      <div className="flex-shrink-0">
+                        <p className="text-[#F9FAFB] font-semibold text-sm">
+                          {new Date(log.date + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                        </p>
+                        <p className="text-[#9CA3AF] text-xs">
+                          {new Date(log.date + 'T00:00:00').toLocaleDateString('en-US', { weekday: 'short' })}
+                        </p>
+                      </div>
+
+                      <div className="flex-1 grid grid-cols-3 gap-2 text-center">
+                        <div>
+                          <p className="font-black text-lg" style={{ color: pc }}>{log.pain}</p>
+                          <p className="text-[#9CA3AF] text-xs">Pain</p>
+                        </div>
+                        <div>
+                          <p className="font-bold text-sm" style={{ color: completionColor }}>{log.completion}</p>
+                          <p className="text-[#9CA3AF] text-xs">Done</p>
+                        </div>
+                        <div>
+                          <p className="font-bold text-sm text-[#F9FAFB]">{log.feeling}</p>
+                          <p className="text-[#9CA3AF] text-xs">Feeling</p>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  )
+                })}
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Week summary */}
-        <div className="bg-[#1E3A5F] rounded-3xl p-5 shadow-lg shadow-[#1E3A5F]/20">
-          <h2 className="text-white font-bold text-base mb-4">This Week's Summary</h2>
-          <div className="grid grid-cols-3 gap-3 text-center">
-            {[
-              { label: 'Sessions', value: `${completedSessions}/${prescribedSessions}`, color: '#34D399' },
-              { label: 'Completion', value: `${Math.round((completedSessions / prescribedSessions) * 100)}%`, color: '#60A5FA' },
-              { label: 'Streak', value: '8 days', color: '#FBBF24' },
-            ].map(({ label, value, color }) => (
-              <div key={label} className="bg-white/10 rounded-2xl py-3">
-                <p className="font-bold text-lg" style={{ color }}>{value}</p>
-                <p className="text-blue-200 text-xs mt-0.5">{label}</p>
-              </div>
-            ))}
-          </div>
         </div>
-
       </div>
     </PatientLayout>
   )
