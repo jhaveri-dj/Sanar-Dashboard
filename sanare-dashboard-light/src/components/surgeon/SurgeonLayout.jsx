@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom'
+import { Link, NavLink, useLocation } from 'react-router-dom'
 import {
   LayoutDashboard, Users, Activity, BarChart2, Settings, ChevronDown, LogOut,
 } from 'lucide-react'
@@ -92,12 +92,11 @@ function SectionLabel({ label, first }) {
 
 export default function SurgeonLayout({ children }) {
   const { user, logout } = useAuth()
-  const navigate = useNavigate()
   const { pathname } = useLocation()
 
   function handleLogout() {
     logout()
-    navigate('/login', { replace: true })
+    window.location.replace('/login')
   }
 
   const displayName = user?.name || 'Dr. James Ortiz'

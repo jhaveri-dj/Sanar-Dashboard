@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { NavLink, useNavigate, useLocation } from 'react-router-dom'
+import { NavLink, useLocation } from 'react-router-dom'
 import { Bell, ChevronDown, LogOut, TrendingUp, ClipboardList, Sparkles } from 'lucide-react'
 import { useAuth } from '../../hooks/useAuth'
 import DemoBadge from '../shared/DemoBadge'
@@ -225,7 +225,6 @@ function RecoveryNavDropdown() {
 
 function UserMenu() {
   const { user, logout } = useAuth()
-  const navigate = useNavigate()
   const [open, setOpen] = useState(false)
   const menuRef = useRef(null)
 
@@ -244,7 +243,7 @@ function UserMenu() {
 
   function handleLogout() {
     logout()
-    navigate('/login', { replace: true })
+    window.location.replace('/login')
   }
 
   return (

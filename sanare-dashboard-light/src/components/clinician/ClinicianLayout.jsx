@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom'
+import { Link, NavLink, useLocation } from 'react-router-dom'
 import {
   LayoutDashboard, Users, Bell, Activity, BarChart2,
   MessageCircle, Settings, ChevronDown, LogOut,
@@ -119,12 +119,11 @@ function SectionLabel({ label, first }) {
 
 export default function ClinicianLayout({ children }) {
   const { user, logout } = useAuth()
-  const navigate = useNavigate()
   const { pathname } = useLocation()
 
   function handleLogout() {
     logout()
-    navigate('/login', { replace: true })
+    window.location.replace('/login')
   }
 
   const displayName = user?.name || 'Sarah Mitchell'

@@ -5,11 +5,20 @@ import { ROLE_HOME } from '../constants/authRoutes'
 import hero from '../assets/hero.png'
 import sanarelogo from '../assets/sanare-logo.png'
 
+function hasStoredSession() {
+  try {
+    return !!localStorage.getItem('sanare_user')
+  } catch {
+    return false
+  }
+}
+
 export default function Login() {
   const { user, selectRole } = useAuth()
   const navigate = useNavigate()
 
-  if (user) {
+  // Trust localStorage over React state — logout clears storage before state updates.
+  if (user && hasStoredSession()) {
     return <Navigate to={ROLE_HOME[user.role] ?? '/login'} replace />
   }
 
