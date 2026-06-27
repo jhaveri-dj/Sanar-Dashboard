@@ -5,6 +5,7 @@ import {
 } from 'lucide-react'
 import { useAuth } from '../../hooks/useAuth'
 import DemoBadge from '../shared/DemoBadge'
+import { signOut } from '../../utils/authSession'
 
 const RAIL_ICONS = [
   { Icon: LayoutDashboard, to: '/surgeon/dashboard',   title: 'Dashboard',   exact: true  },
@@ -91,13 +92,8 @@ function SectionLabel({ label, first }) {
 }
 
 export default function SurgeonLayout({ children }) {
-  const { user, logout } = useAuth()
+  const { user } = useAuth()
   const { pathname } = useLocation()
-
-  function handleLogout() {
-    logout()
-    window.location.replace('/login')
-  }
 
   const displayName = user?.name || 'Dr. James Ortiz'
   const initials = displayName
@@ -317,7 +313,7 @@ export default function SurgeonLayout({ children }) {
         <div style={{ borderTop: '1px solid #F3F4F6', padding: '10px 8px 12px' }}>
           <button
             type="button"
-            onClick={handleLogout}
+            onClick={() => signOut()}
             style={{
               display: 'flex',
               alignItems: 'center',

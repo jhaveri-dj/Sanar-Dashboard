@@ -3,6 +3,7 @@ import { NavLink, useLocation } from 'react-router-dom'
 import { Bell, ChevronDown, LogOut, TrendingUp, ClipboardList, Sparkles } from 'lucide-react'
 import { useAuth } from '../../hooks/useAuth'
 import DemoBadge from '../shared/DemoBadge'
+import { signOut } from '../../utils/authSession'
 
 const NAV_LINKS = [
   { to: '/patient/home', label: 'Home' },
@@ -224,7 +225,7 @@ function RecoveryNavDropdown() {
 }
 
 function UserMenu() {
-  const { user, logout } = useAuth()
+  const { user } = useAuth()
   const [open, setOpen] = useState(false)
   const menuRef = useRef(null)
 
@@ -242,8 +243,7 @@ function UserMenu() {
   }, [open])
 
   function handleLogout() {
-    logout()
-    window.location.replace('/login')
+    signOut()
   }
 
   return (

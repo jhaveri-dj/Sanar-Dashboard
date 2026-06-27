@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import {
   LayoutDashboard, Users, Bell, Activity, BarChart2,
@@ -6,6 +6,7 @@ import {
 } from 'lucide-react'
 import { useAuth } from '../../hooks/useAuth'
 import DemoBadge from '../shared/DemoBadge'
+import { signOut } from '../../utils/authSession'
 import { allAlerts } from '../../data/clinicianData'
 
 const criticalCount = allAlerts.filter(a => a.severity === 'red').length
@@ -118,13 +119,21 @@ function SectionLabel({ label, first }) {
 }
 
 export default function ClinicianLayout({ children }) {
-  const { user, logout } = useAuth()
+  const { user } = useAuth()
   const { pathname } = useLocation()
+  const [menuOpen, setMenuOpen] = useState(false)
+  const menuRef = useRef(null)
 
-  function handleLogout() {
-    logout()
-    window.location.replace('/login')
-  }
+  useEffect(() => {
+    if (!menuOpen) return
+    function onClickOutside(e) {
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setMenuOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', onClickOutside)
+    return () => document.removeEventListener('mousedown', onClickOutside)
+  }, [menuOpen])
 
   const displayName = user?.name || 'Sarah Mitchell'
   const initials = displayName
@@ -222,45 +231,103 @@ export default function ClinicianLayout({ children }) {
       }}>
         {/* Workspace card */}
         <div style={{ padding: 12, borderBottom: '1px solid #F3F4F6', background: '#FAFAFA' }}>
-          <button
-            type="button"
-            style={{
-              width: '100%',
-              display: 'flex',
-              alignItems: 'center',
-              gap: 8,
-              background: 'transparent',
-              border: 'none',
-              cursor: 'pointer',
-              padding: 0,
-              textAlign: 'left',
-            }}
-          >
-            <div style={{
-              width: 32,
-              height: 32,
-              borderRadius: '50%',
-              background: '#4F52C4',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: 'white',
-              fontSize: 11,
-              fontWeight: 600,
-              flexShrink: 0,
-            }}>
-              {initials}
-            </div>
-            <div style={{ flex: 1, minWidth: 0, textAlign: 'left' }}>
-              <p style={{ fontSize: 13, fontWeight: 500, color: '#111827', margin: 0, lineHeight: 1.4, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                {displayName}
-              </p>
-              <p style={{ fontSize: 9, color: '#6B7280', letterSpacing: '0.08em', textTransform: 'uppercase', margin: 0 }}>
-                Clinical Portal
-              </p>
-            </div>
-            <ChevronDown size={14} color="#9CA3AF" strokeWidth={1.8} style={{ flexShrink: 0 }} />
-          </button>
+          <div ref={menuRef} style={{ position: 'relative' }}>
+            <button
+              type="button"
+              onClick={() => setMenuOpen(open => !open)}
+              aria-expanded={menuOpen}
+              aria-haspopup="menu"
+              style={{
+                width: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 8,
+                background: menuOpen ? '#F3F4F6' : 'transparent',
+                border: 'none',
+                cursor: 'pointer',
+                padding: 0,
+                textAlign: 'left',
+                borderRadius: 8,
+              }}
+            >
+              <div style={{
+                width: 32,
+                height: 32,
+                borderRadius: '50%',
+                background: '#4F52C4',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: 'white',
+                fontSize: 11,
+                fontWeight: 600,
+                flexShrink: 0,
+              }}>
+                {initials}
+              </div>
+              <div style={{ flex: 1, minWidth: 0, textAlign: 'left' }}>
+                <p style={{ fontSize: 13, fontWeight: 500, color: '#111827', margin: 0, lineHeight: 1.4, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  {displayName}
+                </p>
+                <p style={{ fontSize: 9, color: '#6B7280', letterSpacing: '0.08em', textTransform: 'uppercase', margin: 0 }}>
+                  Clinical Portal
+                </p>
+              </div>
+              <ChevronDown
+                size={14}
+                color="#9CA3AF"
+                strokeWidth={1.8}
+                style={{
+                  flexShrink: 0,
+                  transform: menuOpen ? 'rotate(180deg)' : 'none',
+                  transition: 'transform 0.15s ease',
+                }}
+              />
+            </button>
+
+            {menuOpen && (
+              <div
+                role="menu"
+                style={{
+                  position: 'absolute',
+                  top: 'calc(100% + 6px)',
+                  left: 0,
+                  right: 0,
+                  background: '#FFFFFF',
+                  border: '1px solid #E8EAED',
+                  borderRadius: 10,
+                  boxShadow: '0 8px 24px rgba(0,0,0,0.12)',
+                  padding: '4px 0',
+                  zIndex: 300,
+                }}
+              >
+                <button
+                  type="button"
+                  role="menuitem"
+                  onClick={() => signOut()}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 8,
+                    width: '100%',
+                    padding: '10px 12px',
+                    fontSize: 13,
+                    fontWeight: 500,
+                    color: '#374151',
+                    background: 'transparent',
+                    border: 'none',
+                    cursor: 'pointer',
+                    textAlign: 'left',
+                  }}
+                  onMouseEnter={e => { e.currentTarget.style.background = '#F9FAFB' }}
+                  onMouseLeave={e => { e.currentTarget.style.background = 'transparent' }}
+                >
+                  <LogOut size={14} color="#6B7280" strokeWidth={1.8} />
+                  Sign out
+                </button>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Nav links */}
@@ -394,7 +461,7 @@ export default function ClinicianLayout({ children }) {
         <div style={{ borderTop: '1px solid #F3F4F6', padding: '10px 8px 12px' }}>
           <button
             type="button"
-            onClick={handleLogout}
+            onClick={() => signOut()}
             style={{
               display: 'flex',
               alignItems: 'center',
