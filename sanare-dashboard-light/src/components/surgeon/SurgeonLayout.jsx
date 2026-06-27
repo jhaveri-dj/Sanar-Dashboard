@@ -5,7 +5,6 @@ import {
 } from 'lucide-react'
 import { useAuth } from '../../hooks/useAuth'
 import DemoBadge from '../shared/DemoBadge'
-import { PORTAL_ENTRY } from '../../constants/authRoutes'
 
 const RAIL_ICONS = [
   { Icon: LayoutDashboard, to: '/surgeon/dashboard',   title: 'Dashboard',   exact: true  },
@@ -98,7 +97,7 @@ export default function SurgeonLayout({ children }) {
 
   function handleLogout() {
     logout()
-    navigate(PORTAL_ENTRY.surgeon, { replace: true })
+    navigate('/login', { replace: true })
   }
 
   const displayName = user?.name || 'Dr. James Ortiz'

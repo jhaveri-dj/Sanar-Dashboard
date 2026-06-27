@@ -6,7 +6,6 @@ import {
 } from 'lucide-react'
 import { useAuth } from '../../hooks/useAuth'
 import DemoBadge from '../shared/DemoBadge'
-import { PORTAL_ENTRY } from '../../constants/authRoutes'
 import { allAlerts } from '../../data/clinicianData'
 
 const criticalCount = allAlerts.filter(a => a.severity === 'red').length
@@ -125,7 +124,7 @@ export default function ClinicianLayout({ children }) {
 
   function handleLogout() {
     logout()
-    navigate(PORTAL_ENTRY.clinician, { replace: true })
+    navigate('/login', { replace: true })
   }
 
   const displayName = user?.name || 'Sarah Mitchell'

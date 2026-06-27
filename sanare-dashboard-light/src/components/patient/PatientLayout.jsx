@@ -3,7 +3,6 @@ import { NavLink, useNavigate, useLocation } from 'react-router-dom'
 import { Bell, ChevronDown, LogOut, TrendingUp, ClipboardList, Sparkles } from 'lucide-react'
 import { useAuth } from '../../hooks/useAuth'
 import DemoBadge from '../shared/DemoBadge'
-import { PORTAL_ENTRY } from '../../constants/authRoutes'
 
 const NAV_LINKS = [
   { to: '/patient/home', label: 'Home' },
@@ -245,7 +244,7 @@ function UserMenu() {
 
   function handleLogout() {
     logout()
-    navigate(PORTAL_ENTRY.patient, { replace: true })
+    navigate('/login', { replace: true })
   }
 
   return (
