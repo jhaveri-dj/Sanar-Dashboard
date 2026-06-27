@@ -1,0 +1,6 @@
+# Local deploy / hosting
+.netlify
+.vercel
+
+# Terminal captures (local only)
+Terminal Saved Output*.txt
