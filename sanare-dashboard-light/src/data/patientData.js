@@ -272,8 +272,8 @@ export const activityRings = {
 }
 
 export const todayStats = {
-  currentRom: 118,
-  bestRomToday: 118,
+  currentRom: 138,
+  bestRomToday: 138,
   activationScore: 75,
   streak: 8,
 }
@@ -290,10 +290,10 @@ export const weeklyInsights = {
 
 // Last 4 weeks of ROM for patient insights chart
 export const recentRomTrend = [
-  { week: 'Wk 9',  rom: 101 },
-  { week: 'Wk 10', rom: 107 },
-  { week: 'Wk 11', rom: 112 },
-  { week: 'Wk 12', rom: 118 },
+  { week: 'Wk 9',  rom: 130 },
+  { week: 'Wk 10', rom: 129 },
+  { week: 'Wk 11', rom: 135 },
+  { week: 'Wk 12', rom: 138 },
 ]
 
 export const sessionsPerWeek = [

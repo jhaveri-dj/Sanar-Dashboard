@@ -30,6 +30,7 @@ export const patients = [
     weekInRecovery: 6,
     totalWeeks: 52,
     graftType: 'Hamstring Autograft',
+    meniscusRepair: true,
     affectedLeg: 'Left',
     assignedPT: 'Sarah Mitchell',
     currentPhase: { number: 2, name: 'Early Mobility', weekRange: 'Weeks 4–9' },
@@ -37,7 +38,7 @@ export const patients = [
     nextSessionDate: '2026-06-06',
     projectedRTSDate: 'Feb 2027',
     contactEmail: 'marcus@patient.com',
-    notes: 'Significant VMO-VL asymmetry detected. Low adherence this week — follow up on barriers. Delay Phase 3 progression until symmetry index reaches 70%.',
+    notes: 'VMO-VL asymmetry 24%, symmetry 64%, adherence 52% — monitor before Phase 3. No session in 4 days.',
   },
   {
     id: 'priya-sharma-003',

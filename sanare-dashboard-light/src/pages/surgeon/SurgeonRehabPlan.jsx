@@ -1,16 +1,16 @@
 import { useParams } from 'react-router-dom'
-import ClinicianLayout from '../../components/clinician/ClinicianLayout'
+import SurgeonLayout from '../../components/surgeon/SurgeonLayout'
 import RehabPlanEditor from '../../components/shared/RehabPlanEditor'
 
-export default function RehabPlan() {
+export default function SurgeonRehabPlan() {
   const { id } = useParams()
   return (
-    <ClinicianLayout>
+    <SurgeonLayout>
       <RehabPlanEditor
         patientId={id}
-        recoveryPlansPath="/clinician/recovery-plans"
+        recoveryPlansPath="/surgeon/recovery-plans"
         breadcrumbLabel="Recovery Plans"
       />
-    </ClinicianLayout>
+    </SurgeonLayout>
   )
 }

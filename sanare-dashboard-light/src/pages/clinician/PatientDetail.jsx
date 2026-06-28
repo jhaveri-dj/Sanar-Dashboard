@@ -14,9 +14,12 @@ import {
   patientDataMap,
   buildDailyMetrics,
   romYAxisTicks,
+  romChartDomain,
   flexionToChart,
+  chartToFlexion,
+  getRomBaseline,
   ROM_FLEXION_GOAL_CHART,
-  ROM_EXTENSION,
+  ROM_FLEXION_MAX,
 } from '../../data/clinicianData'
 import { getPatientAvatar } from '../../data/patientAvatars'
 
@@ -362,7 +365,9 @@ export default function PatientDetail() {
 
   const activeRomData = romView === 'weekly' ? romWeeklyData : romDailyData
   const activeAdherenceData = adherenceView === 'weekly' ? adherenceWeeklyData : adherenceDailyData
-  const romTicks = romYAxisTicks()
+  const romBaseline = getRomBaseline(patient.id)
+  const romTicks = romYAxisTicks(romBaseline)
+  const romDomain = romChartDomain(romBaseline)
 
   const currentEmg = weeklyData.at(-1).emg
 
@@ -407,7 +412,7 @@ export default function PatientDetail() {
               <div>
                 <h2 className="font-semibold text-lg tracking-tight" style={{ color: '#111827' }}>ROM Recovery Trend</h2>
                 <p className="text-xs mt-0.5" style={{ color: '#374151' }}>
-                  From full extension ({ROM_EXTENSION}°) toward flexion goal (150°)
+                  Flexion from post-op baseline ({romBaseline}°) toward goal ({ROM_FLEXION_MAX}°) — line moves down as bending improves
                 </p>
               </div>
               <ViewToggle value={romView} onChange={setRomView} />
@@ -431,13 +436,13 @@ export default function PatientDetail() {
                     tick={{ fill: '#6B7280', fontSize: 11 }}
                     axisLine={{ stroke: '#E5E7EB' }}
                     tickLine={false}
-                    domain={[ROM_FLEXION_GOAL_CHART, ROM_EXTENSION]}
+                    domain={romDomain}
                     ticks={romTicks}
                     allowDecimals={false}
-                    tickFormatter={v => `${v}°`}
+                    tickFormatter={v => `${chartToFlexion(v)}°`}
                   />
                   <Tooltip content={<CustomRomTooltip/>}/>
-                  <ReferenceLine y={ROM_FLEXION_GOAL_CHART} stroke="#16A34A" strokeDasharray="6 4" strokeWidth={1.5} label={{ value: '150° flexion', position: 'right', fill: '#16A34A', fontSize: 11 }}/>
+                  <ReferenceLine y={ROM_FLEXION_GOAL_CHART} stroke="#16A34A" strokeDasharray="6 4" strokeWidth={1.5} label={{ value: `${ROM_FLEXION_MAX}° flexion`, position: 'right', fill: '#16A34A', fontSize: 11 }}/>
                   <Line type="monotone" dataKey="romActual" name="Flexion progress" stroke="#4F52C4" strokeWidth={2.5} dot={{ r: 3, fill: '#4F52C4' }} connectNulls activeDot={{ r: 5, fill: '#4F52C4', strokeWidth: 0 }}/>
                 </ComposedChart>
               </ResponsiveContainer>

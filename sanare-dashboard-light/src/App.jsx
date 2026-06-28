@@ -7,7 +7,6 @@ import PortalEntry from './pages/PortalEntry'
 import Dashboard from './pages/clinician/Dashboard'
 import PatientDetail from './pages/clinician/PatientDetail'
 import RehabPlan from './pages/clinician/RehabPlan'
-import Alerts from './pages/clinician/Alerts'
 import Patients from './pages/clinician/Patients'
 import SensorData from './pages/clinician/SensorData'
 import Reports from './pages/clinician/Reports'
@@ -26,6 +25,8 @@ import SurgeonPatients from './pages/surgeon/SurgeonPatients'
 import SurgeonSensorData from './pages/surgeon/SurgeonSensorData'
 import SurgeonReports from './pages/surgeon/SurgeonReports'
 import SurgeonPatientDetail from './pages/surgeon/SurgeonPatientDetail'
+import SurgeonRecoveryPlans from './pages/surgeon/SurgeonRecoveryPlans'
+import SurgeonRehabPlan from './pages/surgeon/SurgeonRehabPlan'
 
 export default function App() {
   return (
@@ -50,7 +51,7 @@ export default function App() {
             <ProtectedRoute requiredRole="clinician"><RehabPlan /></ProtectedRoute>
           } />
           <Route path="/clinician/alerts" element={
-            <ProtectedRoute requiredRole="clinician"><Alerts /></ProtectedRoute>
+            <ProtectedRoute requiredRole="clinician"><Navigate to="/clinician/dashboard" replace /></ProtectedRoute>
           } />
           <Route path="/clinician/patients" element={
             <ProtectedRoute requiredRole="clinician"><Patients /></ProtectedRoute>
@@ -107,6 +108,12 @@ export default function App() {
           } />
           <Route path="/surgeon/reports" element={
             <ProtectedRoute requiredRole="surgeon"><SurgeonReports /></ProtectedRoute>
+          } />
+          <Route path="/surgeon/recovery-plans" element={
+            <ProtectedRoute requiredRole="surgeon"><SurgeonRecoveryPlans /></ProtectedRoute>
+          } />
+          <Route path="/surgeon/patient/:id/rehab-plan" element={
+            <ProtectedRoute requiredRole="surgeon"><SurgeonRehabPlan /></ProtectedRoute>
           } />
           <Route path="/surgeon/patient/:id" element={
             <ProtectedRoute requiredRole="surgeon"><SurgeonPatientDetail /></ProtectedRoute>

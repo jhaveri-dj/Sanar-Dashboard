@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom'
-import { ChevronRight, Sparkles, AlertTriangle } from 'lucide-react'
+import { ChevronRight, Sparkles } from 'lucide-react'
 import ClinicianLayout from '../../components/clinician/ClinicianLayout'
 import ClinicianTopTabs from '../../components/clinician/ClinicianTopTabs'
-import { allAlerts, clinicianRoster } from '../../data/clinicianData'
+import { clinicianRoster } from '../../data/clinicianData'
 
 const INSIGHTS = [
   {
@@ -13,7 +13,7 @@ const INSIGHTS = [
   },
   {
     title: 'Alex Chen — ROM on track',
-    body: 'Actual ROM trending toward 180° target. Current 118° at week 12 — ahead of typical protocol curve.',
+    body: 'Flexion at 138° at week 12 — within normal range (130–140°). Ahead of typical protocol curve.',
     severity: 'positive',
     patientId: 'alex-chen-001',
   },
@@ -26,8 +26,6 @@ const INSIGHTS = [
 ]
 
 export default function AiInsights() {
-  const critical = allAlerts.filter(a => a.severity === 'red')
-
   return (
     <ClinicianLayout>
       <div style={{
@@ -47,18 +45,6 @@ export default function AiInsights() {
           <h1 className="page-title">AI Insights</h1>
           <p className="page-subtitle">Automated clinical signals across {clinicianRoster.length} active patients</p>
         </div>
-
-        {critical.length > 0 && (
-          <div className="card" style={{ padding: '14px 18px', marginBottom: 20, background: '#FEF2F2', borderColor: '#FECACA' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <AlertTriangle size={16} color="#DC2626" />
-              <p style={{ margin: 0, fontSize: 13, color: '#991B1B' }}>
-                {critical.length} critical alert{critical.length !== 1 ? 's' : ''} require review —{' '}
-                <Link to="/clinician/alerts" style={{ color: '#991B1B', fontWeight: 600 }}>View alerts</Link>
-              </p>
-            </div>
-          </div>
-        )}
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           {INSIGHTS.map(insight => (

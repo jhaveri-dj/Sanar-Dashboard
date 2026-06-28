@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ChevronDown, SlidersHorizontal, Download, Check } from 'lucide-react'
 import { clinicianRoster } from '../../data/clinicianData'
+import { patients } from '../../data/patients'
 
 const CARD = {
   background: '#FFFFFF',
@@ -246,6 +247,7 @@ export default function PatientRosterTable({
           <tbody>
             {sortedRows.map((row, idx) => {
               const badge = rtmStyle(row.rtm)
+              const patient = patients.find(p => p.id === row.id)
               const isLast = idx === sortedRows.length - 1
               return (
                 <tr
@@ -256,10 +258,20 @@ export default function PatientRosterTable({
                   onMouseLeave={e => { e.currentTarget.style.background = 'transparent' }}
                 >
                   <td style={{ width: 3, padding: 0, background: badge.stripe }} />
-                  <td style={{ padding: '12px 16px' }}>
+                  <td style={{ padding: '12px 16px', maxWidth: 220 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                      <img src={row.avatar} alt={row.name} style={{ width: 32, height: 32, borderRadius: '50%', objectFit: 'cover' }} />
-                      <span style={{ fontSize: 13, fontWeight: 500, color: '#111827', whiteSpace: 'nowrap' }}>{row.name}</span>
+                      <img src={row.avatar} alt={row.name} style={{ width: 32, height: 32, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }} />
+                      <div style={{ minWidth: 0 }}>
+                        <span style={{ fontSize: 13, fontWeight: 500, color: '#111827', whiteSpace: 'nowrap', display: 'block' }}>{row.name}</span>
+                        {patient?.notes && (
+                          <span style={{
+                            fontSize: 11, color: '#6B7280', lineHeight: 1.4, marginTop: 2, display: 'block',
+                            overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: 180,
+                          }}>
+                            {patient.notes}
+                          </span>
+                        )}
+                      </div>
                     </div>
                   </td>
                   <td style={{ fontSize: 13, color: '#374151', padding: '12px 16px', whiteSpace: 'nowrap' }}>{row.injury}</td>

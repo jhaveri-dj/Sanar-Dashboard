@@ -10,9 +10,12 @@ import { patients } from '../../data/patients'
 import {
   patientDataMap,
   flexionToChart,
+  chartToFlexion,
   romYAxisTicks,
+  romChartDomain,
+  getRomBaseline,
   ROM_FLEXION_GOAL_CHART,
-  ROM_EXTENSION,
+  ROM_FLEXION_MAX,
 } from '../../data/clinicianData'
 import { getPatientAvatar } from '../../data/patientAvatars'
 
@@ -89,14 +92,14 @@ const CHIP_STYLE = {
 const MILESTONES = {
   'alex-chen-001': [
     { label: 'Pre-op',  rom: 130, lsi: 100, status: 'completed' },
-    { label: 'Week 6',  rom: 83,  lsi: 68,  status: 'completed' },
-    { label: 'Week 12', rom: 118, lsi: 84,  status: 'current'   },
+    { label: 'Week 6',  rom: 122, lsi: 68,  status: 'completed' },
+    { label: 'Week 12', rom: 138, lsi: 84,  status: 'current'   },
     { label: 'Week 22', rom: null, lsi: null, status: 'upcoming' },
     { label: 'RTS',     rom: null, lsi: null, status: 'upcoming' },
   ],
   'marcus-webb-002': [
     { label: 'Pre-op',  rom: 130, lsi: 100, status: 'completed' },
-    { label: 'Week 6',  rom: 89,  lsi: 64,  status: 'current'   },
+    { label: 'Week 6',  rom: 97,  lsi: 64,  status: 'current'   },
     { label: 'Week 12', rom: null, lsi: null, status: 'upcoming' },
     { label: 'Week 22', rom: null, lsi: null, status: 'upcoming' },
     { label: 'RTS',     rom: null, lsi: null, status: 'upcoming' },
@@ -111,7 +114,7 @@ const MILESTONES = {
 }
 
 const PT_NOTES = {
-  'alex-chen-001': 'Alex Chen is progressing well through Phase 3 Strengthening at Week 12 post-operatively. VMO activation has improved incrementally and quad symmetry is trending upward toward clinical benchmarks. ROM of 118° reflects steady gains aligned with protocol expectations. Patient is on track for a November 2026 return-to-sport clearance evaluation, pending symmetry index reaching 90% or above and Joint Strength Index exceeding the 80% threshold.',
+  'alex-chen-001': 'Alex Chen is progressing well through Phase 3 Strengthening at Week 12 post-operatively. VMO activation has improved incrementally and quad symmetry is trending upward toward clinical benchmarks. ROM of 138° reflects steady gains aligned with protocol expectations. Patient is on track for a November 2026 return-to-sport clearance evaluation, pending symmetry index reaching 90% or above and Joint Strength Index exceeding the 80% threshold.',
   'marcus-webb-002': 'Marcus Webb presents with a notable symmetry deficit at Week 6, with LSI currently at 64%, below the 70% clinical threshold required before Phase 3 progression. Weekly adherence has been below protocol at 52%, with no recorded session in the last 4 days. Recommend surgical follow-up before Week 8 to reassess trajectory and address dropout risk. Adjunctive VMO-isolation protocol has been initiated. Adherence barriers should be explored prior to next clinical contact.',
   'priya-sharma-003': 'Priya Sharma has demonstrated exceptional post-operative recovery and is now approaching return-to-sport criteria at Week 22. All three benchmark measures (LSI Symmetry 91%, ROM 128°, and Quad Strength Index 88%) are within or meeting target ranges. A formal return-to-sport clearance discussion is clinically appropriate at the next visit, with projected clearance in July 2026 pending successful functional testing and psychological readiness screening.',
 }
@@ -257,7 +260,9 @@ export default function SurgeonPatientDetail() {
     bf:            w.emg.bf,
     gastroc:       w.emg.gastroc,
   }))
-  const romTicks = romYAxisTicks()
+  const romBaseline = getRomBaseline(patient.id)
+  const romTicks = romYAxisTicks(romBaseline)
+  const romDomain = romChartDomain(romBaseline)
 
   const lsiStatus = criterionStatus(s.symmetryIndex, 90)
   const romStatus = criterionStatus(s.rom, 125)
@@ -385,7 +390,7 @@ export default function SurgeonPatientDetail() {
             <div style={{ marginBottom: 16 }}>
               <h2 style={SECTION_TITLE}>ROM Recovery Trend</h2>
               <p style={{ color: '#6B7280', fontSize: 12, margin: '4px 0 0' }}>
-                From full extension ({ROM_EXTENSION}°) toward flexion goal (150°)
+                Flexion from post-op baseline ({romBaseline}°) toward goal ({ROM_FLEXION_MAX}°) — line moves down as bending improves
               </p>
             </div>
             <div style={{ display: 'flex', gap: 12, fontSize: 11, marginBottom: 12, color: '#374151' }}>
@@ -407,12 +412,12 @@ export default function SurgeonPatientDetail() {
                     tick={{ fill: '#6B7280', fontSize: 10 }}
                     axisLine={{ stroke: '#E5E7EB' }}
                     tickLine={false}
-                    domain={[ROM_FLEXION_GOAL_CHART, ROM_EXTENSION]}
+                    domain={romDomain}
                     ticks={romTicks}
-                    tickFormatter={v => `${v}°`}
+                    tickFormatter={v => `${chartToFlexion(v)}°`}
                   />
                   <Tooltip content={<CustomRomTooltip/>}/>
-                  <ReferenceLine y={ROM_FLEXION_GOAL_CHART} stroke="#16A34A" strokeDasharray="6 4" strokeWidth={1.5}/>
+                  <ReferenceLine y={ROM_FLEXION_GOAL_CHART} stroke="#16A34A" strokeDasharray="6 4" strokeWidth={1.5} label={{ value: `${ROM_FLEXION_MAX}° flexion`, position: 'right', fill: '#16A34A', fontSize: 10 }}/>
                   <Line type="monotone" dataKey="romActual" stroke="#4F52C4" strokeWidth={2.5} dot={{ r: 3, fill: '#4F52C4' }} connectNulls activeDot={{ r: 5, fill: '#4F52C4', strokeWidth: 0 }}/>
                 </ComposedChart>
               </ResponsiveContainer>

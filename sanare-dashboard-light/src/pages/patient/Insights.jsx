@@ -17,9 +17,12 @@ import { currentPatient } from '../../data/patients'
 import ViewToggle from '../../components/clinician/ViewToggle'
 import {
   flexionToChart,
-  ROM_EXTENSION,
+  chartToFlexion,
+  ROM_FLEXION_MAX,
   ROM_FLEXION_GOAL_CHART,
+  ROM_BASELINE_STANDARD,
   romYAxisTicks,
+  romChartDomain,
   buildDailyMetrics,
   patientDataMap,
 } from '../../data/clinicianData'
@@ -165,7 +168,9 @@ export default function Insights() {
 
   const activeRomData = romView === 'weekly' ? romWeeklyData : romDailyData
   const romXKey = romView === 'weekly' ? 'week' : 'label'
-  const romTicks = romYAxisTicks()
+  const romBaseline = ROM_BASELINE_STANDARD
+  const romTicks = romYAxisTicks(romBaseline)
+  const romDomain = romChartDomain(romBaseline)
   const joggingGoalChart = flexionToChart(JOGGING_FLEXION)
 
   return (
@@ -294,7 +299,7 @@ export default function Insights() {
                 title="How Far Your Knee Bends"
                 subtitle={
                   romView === 'weekly'
-                    ? `After surgery your leg starts straight (${ROM_EXTENSION}°). The line moves down as bending improves — ${JOGGING_FLEXION}° flexion is the jogging goal.`
+                    ? `After surgery you start around ${romBaseline}° flexion. The line moves down as bending improves — ${JOGGING_FLEXION}° is the jogging goal (max ${ROM_FLEXION_MAX}°).`
                     : 'Last 14 days — each point is your best bend that day from your Sanaré Sleeve.'
                 }
                 badge={<TrendBadge>+{weeklyInsights.romImprovement}° flexion this month</TrendBadge>}
@@ -308,9 +313,9 @@ export default function Insights() {
                       tick={axisStyle}
                       axisLine={false}
                       tickLine={false}
-                      domain={[ROM_FLEXION_GOAL_CHART, ROM_EXTENSION]}
+                      domain={romDomain}
                       ticks={romTicks}
-                      tickFormatter={v => `${v}°`}
+                      tickFormatter={v => `${chartToFlexion(v)}°`}
                     />
                     <Tooltip content={<RomFlexionTooltip />} />
                     <ReferenceLine

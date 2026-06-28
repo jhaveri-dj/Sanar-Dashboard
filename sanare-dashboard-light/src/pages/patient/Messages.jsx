@@ -12,7 +12,7 @@ const INITIAL_MESSAGES = [
   {
     id: 1,
     sender: 'dr_mitchell',
-    text: "Hi Alex, great work this week! ROM hit 118° — that's your personal best. The terminal knee extensions are really paying off.",
+    text: "Hi Alex, great work this week! ROM hit 138° — that's your personal best. The terminal knee extensions are really paying off.",
     time: 'Jun 3, 10:42 AM',
   },
   {

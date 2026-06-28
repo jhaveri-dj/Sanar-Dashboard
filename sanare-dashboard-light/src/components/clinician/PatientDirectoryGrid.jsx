@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { MessageCircle, Pencil, User } from 'lucide-react'
+import { MessageCircle, Pencil, User, FileText } from 'lucide-react'
 import { patients } from '../../data/patients'
 import { getPatientAvatar } from '../../data/patientAvatars'
 
@@ -15,7 +15,12 @@ function rtmStyle(status) {
   return { bg: '#F0FDF4', color: '#16A34A', border: '#BBF7D0' }
 }
 
-export default function PatientDirectoryGrid({ rows }) {
+export default function PatientDirectoryGrid({ rows, portal = 'clinician' }) {
+  const isSurgeon = portal === 'surgeon'
+  const profilePath = id => isSurgeon ? `/surgeon/patient/${id}` : `/clinician/patient/${id}`
+  const protocolPath = id => isSurgeon ? `/surgeon/patient/${id}/rehab-plan` : `/clinician/patient/${id}/rehab-plan`
+  const thirdPath = id => isSurgeon ? `/surgeon/reports?patient=${id}` : `/clinician/messages/${id}`
+
   return (
     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 16 }}>
       {rows.map(row => {
@@ -43,6 +48,14 @@ export default function PatientDirectoryGrid({ rows }) {
                 <p style={{ margin: '2px 0 0', fontSize: 12, color: '#9CA3AF' }}>
                   {patient?.currentPhase.name} · Week {row.week}
                 </p>
+                {patient?.notes && (
+                  <p style={{
+                    margin: '8px 0 0', fontSize: 11, color: '#6B7280', lineHeight: 1.45,
+                    display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
+                  }}>
+                    {patient.notes}
+                  </p>
+                )}
               </div>
             </div>
 
@@ -69,7 +82,7 @@ export default function PatientDirectoryGrid({ rows }) {
 
             <div style={{ padding: '12px 16px', display: 'flex', gap: 8 }}>
               <Link
-                to={`/clinician/patient/${row.id}`}
+                to={profilePath(row.id)}
                 className="btn-ghost"
                 style={{ flex: 1, justifyContent: 'center', textDecoration: 'none', fontSize: 12 }}
               >
@@ -77,7 +90,7 @@ export default function PatientDirectoryGrid({ rows }) {
                 Profile
               </Link>
               <Link
-                to={`/clinician/patient/${row.id}/rehab-plan`}
+                to={protocolPath(row.id)}
                 className="btn-ghost"
                 style={{ flex: 1, justifyContent: 'center', textDecoration: 'none', fontSize: 12 }}
               >
@@ -85,12 +98,12 @@ export default function PatientDirectoryGrid({ rows }) {
                 Protocol
               </Link>
               <Link
-                to={`/clinician/messages/${row.id}`}
+                to={thirdPath(row.id)}
                 className="btn-ghost"
                 style={{ flex: 1, justifyContent: 'center', textDecoration: 'none', fontSize: 12 }}
               >
-                <MessageCircle size={14} />
-                Message
+                {isSurgeon ? <FileText size={14} /> : <MessageCircle size={14} />}
+                {isSurgeon ? 'Report' : 'Message'}
               </Link>
             </div>
           </div>

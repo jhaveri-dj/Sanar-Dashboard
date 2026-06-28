@@ -1,28 +1,28 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import {
-  LayoutDashboard, Users, Bell, Activity, BarChart2,
-  MessageCircle, Settings, ChevronDown, LogOut,
+  LayoutDashboard, Users, Activity, BarChart2,
+  MessageCircle, Settings, ChevronDown, LogOut, ClipboardList,
 } from 'lucide-react'
 import { useAuth } from '../../hooks/useAuth'
 import DemoBadge from '../shared/DemoBadge'
 import { signOut } from '../../utils/authSession'
-import { allAlerts } from '../../data/clinicianData'
-
-const criticalCount = allAlerts.filter(a => a.severity === 'red').length
 
 const RAIL_ICONS = [
-  { Icon: LayoutDashboard, to: '/clinician/dashboard',   title: 'Dashboard',   exact: true },
-  { Icon: Users,           to: '/clinician/patients',    title: 'Patients',    exact: false },
-  { Icon: Bell,            to: '/clinician/alerts',      title: 'Alerts',      exact: true,  badge: criticalCount },
-  { Icon: MessageCircle,   to: '/clinician/messages',    title: 'Messaging',   exact: true },
-  { Icon: Activity,        to: '/clinician/sensor-data', title: 'Sensor Data', exact: true },
-  { Icon: BarChart2,       to: '/clinician/reports',     title: 'Reports',     exact: true },
+  { Icon: LayoutDashboard, to: '/clinician/dashboard',    title: 'Dashboard',       exact: true },
+  { Icon: Users,           to: '/clinician/patients',     title: 'Patients',        exact: false },
+  { Icon: ClipboardList,   to: '/clinician/recovery-plans', title: 'Recovery Plans', exact: true },
+  { Icon: MessageCircle,   to: '/clinician/messages',     title: 'Messaging',       exact: true },
+  { Icon: Activity,        to: '/clinician/sensor-data',  title: 'Sensor Data',     exact: true },
+  { Icon: BarChart2,       to: '/clinician/reports',      title: 'Reports',         exact: true },
 ]
 
 function isRailActive(item, pathname) {
   if (item.to === '/clinician/patients') {
-    return pathname === item.to || /^\/clinician\/patient\//.test(pathname)
+    return pathname === item.to || (/^\/clinician\/patient\//.test(pathname) && !pathname.endsWith('/rehab-plan'))
+  }
+  if (item.to === '/clinician/recovery-plans') {
+    return pathname === item.to || pathname.endsWith('/rehab-plan')
   }
   return item.exact ? pathname === item.to : pathname.startsWith(item.to)
 }
@@ -351,56 +351,41 @@ export default function ClinicianLayout({ children }) {
             )}
           </NavLink>
 
-          <NavLink
-            to="/clinician/alerts"
-            style={({ isActive }) => ({
-              ...NAV_ITEM,
-              background: isActive ? '#EEF2FF' : 'transparent',
-              color: isActive ? '#4F52C4' : '#374151',
-            })}
-          >
-            {({ isActive }) => (
-              <>
-                <Bell size={14} color={isActive ? '#4F52C4' : '#6B7280'} strokeWidth={1.8} />
-                <span style={{ flex: 1 }}>Alerts</span>
-                {criticalCount > 0 && (
-                  <span style={{
-                    background: '#FEF2F2',
-                    color: '#DC2626',
-                    border: '1px solid #FECACA',
-                    borderRadius: 999,
-                    fontSize: 10,
-                    fontWeight: 600,
-                    padding: '0 5px',
-                    lineHeight: '16px',
-                    minWidth: 16,
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}>
-                    {criticalCount}
-                  </span>
-                )}
-              </>
-            )}
-          </NavLink>
-
           <SectionLabel label="Patients" />
 
           <NavLink
             to="/clinician/patients"
             style={({ isActive }) => ({
               ...NAV_ITEM,
-              background: (isActive || /^\/clinician\/patient\//.test(pathname)) ? '#EEF2FF' : 'transparent',
-              color: (isActive || /^\/clinician\/patient\//.test(pathname)) ? '#4F52C4' : '#374151',
+              background: (isActive || (/^\/clinician\/patient\//.test(pathname) && !pathname.endsWith('/rehab-plan'))) ? '#EEF2FF' : 'transparent',
+              color: (isActive || (/^\/clinician\/patient\//.test(pathname) && !pathname.endsWith('/rehab-plan'))) ? '#4F52C4' : '#374151',
             })}
           >
             {({ isActive }) => {
-              const active = isActive || /^\/clinician\/patient\//.test(pathname)
+              const active = isActive || (/^\/clinician\/patient\//.test(pathname) && !pathname.endsWith('/rehab-plan'))
               return (
                 <>
                   <Users size={14} color={active ? '#4F52C4' : '#6B7280'} strokeWidth={1.8} />
                   <span>Patients</span>
+                </>
+              )
+            }}
+          </NavLink>
+
+          <NavLink
+            to="/clinician/recovery-plans"
+            style={({ isActive }) => ({
+              ...NAV_ITEM,
+              background: (isActive || pathname.endsWith('/rehab-plan')) ? '#EEF2FF' : 'transparent',
+              color: (isActive || pathname.endsWith('/rehab-plan')) ? '#4F52C4' : '#374151',
+            })}
+          >
+            {({ isActive }) => {
+              const active = isActive || pathname.endsWith('/rehab-plan')
+              return (
+                <>
+                  <ClipboardList size={14} color={active ? '#4F52C4' : '#6B7280'} strokeWidth={1.8} />
+                  <span>Recovery Plans</span>
                 </>
               )
             }}

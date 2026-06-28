@@ -1,22 +1,26 @@
 import { useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import {
-  LayoutDashboard, Users, Activity, BarChart2, Settings, ChevronDown, LogOut,
+  LayoutDashboard, Users, Activity, BarChart2, Settings, ChevronDown, LogOut, ClipboardList,
 } from 'lucide-react'
 import { useAuth } from '../../hooks/useAuth'
 import DemoBadge from '../shared/DemoBadge'
 import { signOut } from '../../utils/authSession'
 
 const RAIL_ICONS = [
-  { Icon: LayoutDashboard, to: '/surgeon/dashboard',   title: 'Dashboard',   exact: true  },
-  { Icon: Users,           to: '/surgeon/patients',    title: 'Patients',    exact: false },
-  { Icon: Activity,        to: '/surgeon/sensor-data', title: 'Sensor Data', exact: true  },
-  { Icon: BarChart2,       to: '/surgeon/reports',     title: 'Reports',     exact: true  },
+  { Icon: LayoutDashboard, to: '/surgeon/dashboard',       title: 'Dashboard',       exact: true  },
+  { Icon: Users,           to: '/surgeon/patients',        title: 'Patients',        exact: false },
+  { Icon: ClipboardList,   to: '/surgeon/recovery-plans',  title: 'Recovery Plans',  exact: true  },
+  { Icon: Activity,        to: '/surgeon/sensor-data',     title: 'Sensor Data',     exact: true  },
+  { Icon: BarChart2,       to: '/surgeon/reports',         title: 'Reports',         exact: true  },
 ]
 
 function isRailActive(item, pathname) {
   if (item.to === '/surgeon/patients') {
-    return pathname === item.to || /^\/surgeon\/patient\//.test(pathname)
+    return pathname === item.to || (/^\/surgeon\/patient\//.test(pathname) && !pathname.endsWith('/rehab-plan'))
+  }
+  if (item.to === '/surgeon/recovery-plans') {
+    return pathname === item.to || /\/rehab-plan$/.test(pathname)
   }
   return item.exact ? pathname === item.to : pathname.startsWith(item.to)
 }
@@ -259,16 +263,35 @@ export default function SurgeonLayout({ children }) {
             to="/surgeon/patients"
             style={({ isActive }) => ({
               ...NAV_ITEM,
-              background: (isActive || /^\/surgeon\/patient\//.test(pathname)) ? '#EEF2FF' : 'transparent',
-              color: (isActive || /^\/surgeon\/patient\//.test(pathname)) ? '#4F52C4' : '#374151',
+              background: (isActive || (/^\/surgeon\/patient\//.test(pathname) && !pathname.endsWith('/rehab-plan'))) ? '#EEF2FF' : 'transparent',
+              color: (isActive || (/^\/surgeon\/patient\//.test(pathname) && !pathname.endsWith('/rehab-plan'))) ? '#4F52C4' : '#374151',
             })}
           >
             {({ isActive }) => {
-              const active = isActive || /^\/surgeon\/patient\//.test(pathname)
+              const active = isActive || (/^\/surgeon\/patient\//.test(pathname) && !pathname.endsWith('/rehab-plan'))
               return (
                 <>
                   <Users size={14} color={active ? '#4F52C4' : '#6B7280'} strokeWidth={1.8} />
                   <span>Patients</span>
+                </>
+              )
+            }}
+          </NavLink>
+
+          <NavLink
+            to="/surgeon/recovery-plans"
+            style={({ isActive }) => ({
+              ...NAV_ITEM,
+              background: (isActive || /\/rehab-plan$/.test(pathname)) ? '#EEF2FF' : 'transparent',
+              color: (isActive || /\/rehab-plan$/.test(pathname)) ? '#4F52C4' : '#374151',
+            })}
+          >
+            {({ isActive }) => {
+              const active = isActive || /\/rehab-plan$/.test(pathname)
+              return (
+                <>
+                  <ClipboardList size={14} color={active ? '#4F52C4' : '#6B7280'} strokeWidth={1.8} />
+                  <span>Recovery Plans</span>
                 </>
               )
             }}
